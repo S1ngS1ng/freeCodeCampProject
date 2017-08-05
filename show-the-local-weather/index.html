@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css' rel='stylesheet' type='text/css'>
+    <link href='https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css' rel='stylesheet' type='text/css'>
+    <title>Local Weather app</title>
+</head>
+<body>
+<h1 class="header animated fadeInUp">Simple Weather App</h1>
+<div class="header-wrapper">
+    <div id="city-name"></div>
+    <div class="switch-wrapper">
+        <input type="checkbox" class="hidden checkbox" id="checkbox">
+        <label id="switch-label" class="switch" for="checkbox" onclick="toggleUnit(this)" data-current-unit="metric">
+            <span class="unit-text-cel">°C</span>
+            <span class="unit-text-fah">°F</span>
+        </label>
+    </div>
+</div>
+<div id="date-time">
+    <span id="current-date"></span>
+    <span id="current-time"></span>
+</div>
+<div id="interface">
+    <div class="column-left">
+        <!-- Weather icon -->
+        <div class="current">
+            <h2 id="current-description"></h2>
+            <div id="current-icon"></div>
+        </div>
+    </div>
+    <div class="column-center">
+        <!-- Current data -->
+        <table>
+            <tbody>
+            <tr id="result-temp">
+                <th>温度</th>
+                <td class="data"></td>
+                <td class="unit-temp">°C</td>
+            </tr>
+            <tr id="result-pressure">
+                <th>气压</th>
+                <td class="data"></td>
+                <td class="unit-pressure">hPa</td>
+            </tr>
+            <tr id="result-humidity">
+                <th>湿度</th>
+                <td class="data"></td>
+                <td class="unit-percentage">%</td>
+            </tr>
+            <tr id="result-temp_min">
+                <th>最低温度</th>
+                <td class="data"></td>
+                <td class="unit-temp">°C</td>
+            </tr>
+            <tr id="result-temp_max">
+                <th>最高温度</th>
+                <td class="data"></td>
+                <td class="unit-temp">°C</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="column-right">
+        <table>
+            <tbody>
+            <tr id="result-wind-deg">
+                <th>风向</th>
+                <td class="icon"></td>
+            </tr>
+            <tr id="result-wind-speed">
+                <th>风力</th>
+                <td class="icon"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+/* General text color and background color */
+body {
+  background-color: #212121;
+  color: #E0E0E0;
+  font-family: monaco, Consolas, monospace; }
+
+h1.header {
+  font-size: 4em;
+  text-align: center;
+  margin: 0.5em; }
+
+.header-wrapper {
+  position: relative;
+  margin: auto;
+  text-align: center;
+  /* Header style */
+  /* Switch */ }
+  .header-wrapper div#city-name {
+    position: relative;
+    left: -10%;
+    top: 0.5em;
+    display: inline-block;
+    font-size: 2em; }
+  .header-wrapper .switch-wrapper {
+    position: relative;
+    transform: translate(-50%, -50%);
+    margin-left: 60%; }
+    .header-wrapper .switch-wrapper .checkbox:checked ~ label {
+      background: #AB47BC; }
+      .header-wrapper .switch-wrapper .checkbox:checked ~ label:after {
+        left: 70px; }
+    .header-wrapper .switch-wrapper .checkbox:checked + .switch .unit-text-cel {
+      display: none; }
+    .header-wrapper .switch-wrapper .checkbox:checked + .switch .unit-text-fah {
+      display: block; }
+    .header-wrapper .switch-wrapper .switch {
+      position: relative;
+      display: inline-block;
+      height: 35px;
+      width: 100px;
+      background: #898989;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all 0.3s ease; }
+      .header-wrapper .switch-wrapper .switch [class^="unit-text"] {
+        color: white;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        font-size: 1.5em;
+        transform: translate(-50%, -50%); }
+      .header-wrapper .switch-wrapper .switch .unit-text-fah {
+        display: none; }
+      .header-wrapper .switch-wrapper .switch:after {
+        position: absolute;
+        display: block;
+        width: 35px;
+        height: 35px;
+        border-radius: 100px;
+        background: white;
+        box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.05);
+        content: "";
+        color: black;
+        font-size: 1.5em;
+        transition: all 0.4s cubic-bezier(0.33, 1.6, 0.66, 1); }
+      .header-wrapper .switch-wrapper .switch:active:after {
+        transform: scale(1.25, 0.75); }
+    .header-wrapper .switch-wrapper .hidden {
+      display: none; }
+
+div#date-time {
+  text-align: center; }
+  div#date-time span {
+    margin: 1em; }
+
+#interface {
+  margin-top: 2em; }
+  #interface div[class^="column"] {
+    width: 33%;
+    float: left; }
+  #interface .column-left {
+    text-align: center; }
+    #interface .column-left #current-description {
+      font-size: 2em;
+      margin: 0; }
+    #interface .column-left i {
+      margin-top: 0.2em;
+      font-size: 7em; }
+  #interface .column-center table {
+    margin: 0 auto;
+    font-size: 1.3em;
+    text-align: center; }
+    #interface .column-center table tr > th {
+      width: 30%; }
+    #interface .column-center table tr > td.data {
+      width: 30%; }
+    #interface .column-center table tr > td[class^="unit"] {
+      width: 30%; }
+  #interface .column-right table {
+    border-spacing: 2em 0;
+    margin: 2em auto;
+    font-size: 1.1em;
+    text-align: center; }
+    #interface .column-right table tr > th {
+      width: 50%; }
+    #interface .column-right table tr > td {
+      width: 50%; }
+      #interface .column-right table tr > td i {
+        font-size: 2em; }
+
+@media screen and (max-width: 1400px) {
+  h1.header {
+    position: relative; }
+
+  .switch-wrapper {
+    position: absolute;
+    right: 0; } }
+@media screen and (max-width: 800px) {
+  div[class^="column"] {
+    width: 100%; }
+
+  .switch-wrapper {
+    position: absolute;
+    margin-top: 3em;
+    right: 25%; } }
+
+/*# sourceMappingURL=style.css.map */
