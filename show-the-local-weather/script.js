@@ -15,7 +15,7 @@ httpGetAsync('https://ipinfo.io/json', function(response) {
 
     // Use 'metric' unit for the first call, as defined in label
     getWeather(res.city, res.county, 'metric')
-})
+});
 
 /* Function set */
 
@@ -26,7 +26,7 @@ function httpGetAsync(url, callback) {
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200) {
             callback(xmlHttp.responseText);
         }
-    }
+    };
     xmlHttp.open("GET", url, true); // true for asynchronous
     xmlHttp.send();
 }
@@ -102,7 +102,7 @@ function updateUnit(unit) {
     var unitMap = {
         metric: '°C',
         imperial: '°F'
-    }
+    };
     var unitDOM = document.querySelectorAll('#interface td.unit-temp');
     for (var i = 0; i < unitDOM.length; i++) {
         unitDOM[i].innerHTML = unitMap[unit];
@@ -136,7 +136,7 @@ function getWeatherIcon(id) {
         960: 'wi-storm-warning',
         961: 'wi-storm-warning',
         962: 'wi-hurricane-warning'
-    }
+    };
 
     if (iconMap.hasOwnProperty(id)) {
         return iconMap[id];
