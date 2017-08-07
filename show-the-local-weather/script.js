@@ -9,13 +9,11 @@ setInterval(getDateTime, 1000);
 // 使用 ipinfo.io 服务
 httpGetAsync('https://ipinfo.io/json', function(response) {
     var res = JSON.parse(response);
-
     // 缓存地点信息
     locationObj.city = res.city;
     locationObj.country = res.country;
-
     // 初始化，使用公制单位
-    getWeather(res.city, res.county, 'metric')
+    getWeather(res.city, res.country, 'metric')
 });
 
 /* 函数定义 */
@@ -27,7 +25,8 @@ function httpGetAsync(url, callback) {
             callback(xmlHttp.responseText);
         }
     };
-    xmlHttp.open("GET", url, true); // true for asynchronous
+    // 异步请求，第三个参数为 true
+    xmlHttp.open("GET", url, true);
     xmlHttp.send();
 }
 
@@ -116,6 +115,7 @@ function updateUnit(unit) {
 function getWeatherIcon(id) {
     var d = new Date();
     var prefix = 'wi-' + ((d.getHours() >= 7 && d.getHours() <= 19 ? 'day-' : 'night-'));
+    // 创建 id 与图标的 map
     var iconMap = {
         701: 'wi-fog',
         711: 'wi-smoke',
