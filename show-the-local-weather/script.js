@@ -1,25 +1,25 @@
 var locationObj = {};
 var cachedData = {};
 
-// Show date and time, update every second
+// 显示时间和日期。每秒更新一次
 getDateTime();
 setInterval(getDateTime, 1000);
 
-// Get city and country by ip address
+// 通过 ip 地址获取国家和城市
+// 使用 ipinfo.io 服务
 httpGetAsync('https://ipinfo.io/json', function(response) {
     var res = JSON.parse(response);
 
-    // Cache location data
+    // 缓存地点信息
     locationObj.city = res.city;
     locationObj.country = res.country;
 
-    // Use 'metric' unit for the first call, as defined in label
+    // 初始化，使用公制单位
     getWeather(res.city, res.county, 'metric')
 });
 
-/* Function set */
-
-// Async GET call with Vanilla js
+/* 函数定义 */
+// 封装异步 GET 请求
 function httpGetAsync(url, callback) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() {
@@ -31,17 +31,18 @@ function httpGetAsync(url, callback) {
     xmlHttp.send();
 }
 
-// Get weather data with OpenWeatherMap API
+// 从 OpenWeatherMap API 获取天气数据
 function getWeather(city, country, unit) {
-    // Use cors-anywhere to handle cross-origin
+    // 使用 cors-anywhere 处理跨域请求
+    // https://github.com/Rob--W/cors-anywhere
     var url = 'https://cors-anywhere.herokuapp.com/http://api.openweathermap.org/data/2.5/weather?APPID=6911d9263aa326b056132d96ecb8c23e';
-    // Append unit, city, country and language to the call
+    // 为请求添加参数：单位、城市、国家和语言
     url += '&units=' + unit +
         '&q=' + city || locationObj.city + ',' +
         country || locationObj.country;
     url += '&lang=zh_cn';
 
-    // Cache response
+    // 判断请求结果是否缓存
     if (cachedData[unit]) {
         renderPage(cachedData[unit]);
     } else {
@@ -52,6 +53,7 @@ function getWeather(city, country, unit) {
     }
 }
 
+// 获取年月日和时间
 function getDateTime() {
     var d = new Date();
     var dateString = d.getFullYear() + ' 年 ' +
@@ -65,7 +67,7 @@ function getDateTime() {
     updateById('current-time', timeString);
 }
 
-// Call back function for toggle switch click event
+// 切换单位按钮，点击事件的回调函数
 function toggleUnit(ele) {
     var unitArr = ['metric', 'imperial'];
     var currentIndex = unitArr.indexOf(ele.dataset.currentUnit);
@@ -76,9 +78,9 @@ function toggleUnit(ele) {
     updateUnit(targetUnit);
 }
 
-// Page render function. Call when data is ready
+// 页面加载的函数，在天气数据准备好时调用
 function renderPage(res) {
-    // Update first column
+    // 更新第一列（最左）
     updateById('city-name', res.name);
     updateById('current-icon',
         '<i class="wi ' +
@@ -86,18 +88,19 @@ function renderPage(res) {
         '"></i>');
     updateById('current-description', res.weather[0].description);
 
-    // Update second column
+    // 更新第二列（中间）
     for (var attr in res.main) {
         updateByQuery(('tr#result-' + attr + '> td.data'), res.main[attr]);
     }
 
-    // Right column
+    // 更新第三列（最右）
     updateByQuery('#result-wind-deg > td.icon',
         '<i class="wi wi-wind towards-' + res.wind.deg + '-deg"></i>');
     updateByQuery('#result-wind-speed > td.icon',
         '<i class="wi wi-wind-beaufort-' + parseInt(res.wind.speed) + '"></i>');
 }
 
+// 更新天气信息单位
 function updateUnit(unit) {
     var unitMap = {
         metric: '°C',
@@ -109,7 +112,7 @@ function updateUnit(unit) {
     }
 }
 
-// Add class to weather icon
+// 给 icon 节点添加 class，用于显示天气图标
 function getWeatherIcon(id) {
     var d = new Date();
     var prefix = 'wi-' + ((d.getHours() >= 7 && d.getHours() <= 19 ? 'day-' : 'night-'));
@@ -160,11 +163,12 @@ function getWeatherIcon(id) {
     return false;
 }
 
-// Update function for element found by id
+// 封装通过 id 更新节点数据的方法
 function updateById(id, data) {
     document.getElementById(id).innerHTML = data;
 }
 
+// 封装通过 querySelector 更新节点数据的方法
 function updateByQuery(selector, data) {
     document.querySelector(selector).innerHTML = data;
 }
