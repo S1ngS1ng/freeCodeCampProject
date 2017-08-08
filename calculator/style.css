@@ -1,0 +1,102 @@
+body {
+  padding: 3vh; }
+  body #caption {
+    display: table-caption;
+    text-align: center;
+    font-size: 4vw;
+    margin-bottom: 1vh;
+    font-family: "Pacifico", cursive;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none; }
+  body #wrapper {
+    display: table;
+    position: relative;
+    margin: 0 auto;
+    width: 60%;
+    height: 100%;
+    border-collapse: separate;
+    border-spacing: 2.5vw; }
+    body #wrapper #screen {
+      position: relative;
+      display: table-caption;
+      width: calc(100% - 6vw);
+      margin: 0.3vw auto;
+      padding: 0 0.5vw;
+      text-align: right;
+      font-family: "Orbitron", fantasy;
+      background-color: #848E70;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none; }
+      body #wrapper #screen > span {
+        display: inline-block;
+        font-size: 5vw;
+        position: relative;
+        top: 0.2em;
+        margin-bottom: 0.1em; }
+        body #wrapper #screen > span#screen-expression {
+          display: block;
+          font-size: 2.5vw;
+          height: 2.5vw; }
+        body #wrapper #screen > span#screen-result {
+          width: 80%;
+          margin-right: 0.5em; }
+        body #wrapper #screen > span#screen-operator {
+          position: absolute;
+          top: auto;
+          bottom: 0.3em;
+          right: 0.5em;
+          font-size: 2vw; }
+    body #wrapper div.row {
+      display: table-row;
+      height: 8vw; }
+      body #wrapper div.row div.button {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        position: relative;
+        display: table-cell;
+        width: 4vw;
+        font-size: 4vw;
+        text-align: center;
+        vertical-align: middle;
+        cursor: pointer;
+        color: #E0E0E0;
+        background: #616161;
+        border: 1px solid #616161;
+        border-radius: 6px;
+        -moz-box-shadow: inset 0 0 15px #757575, inset 0 1px #FAFAFA, 0 1px 4px #212121;
+        -webkit-box-shadow: inset 0 0 15px #757575, inset 0 1px #FAFAFA, 0 1px 4px #212121;
+        box-shadow: inset 0 0 15px #757575, inset 0 1px 5px #FAFAFA, 0 1px 4px #212121;
+        transition-duration: 0.6s; }
+        body #wrapper div.row div.button#button-ac {
+          font-size: 3vw; }
+        body #wrapper div.row div.button#button-ans {
+          font-size: 2.5vw; }
+        body #wrapper div.row div.button:active, body #wrapper div.row div.button.active {
+          transition-duration: 0s;
+          color: #FAFAFA;
+          box-shadow: inset 0 0 20px #212121; }
+        body #wrapper div.row div.button:after {
+          content: "";
+          display: block;
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+          pointer-events: none;
+          background: radial-gradient(circle, #FFFFFF 10%, transparent 10%) no-repeat 50%;
+          transform: scale(10, 9);
+          opacity: 0;
+          transition: transform 0.3s, opacity 1s; }
+        body #wrapper div.row div.button:active:after {
+          transform: scale(0, 0);
+          opacity: 0.2;
+          transition: 0s; }
+
+/*# sourceMappingURL=style.css.map */
