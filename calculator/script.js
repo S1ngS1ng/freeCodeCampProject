@@ -20,7 +20,8 @@ var _ref = {
     },
     numStack: [],
     operatorStack: [],
-    temp: ''
+    temp: '',
+    expression: ''
 };
 
 // Define all operators, precedence indicated by index
@@ -63,9 +64,9 @@ function handleClick(value, _this) {
         updateScreen('operator', '');
     } else if (value === 'Enter' || value === '=') {
         // Case =
-        var expression = calculateAll(_this);
+        _this.expression = calculateAll(_this);
         updateScreen('result', _this.temp);
-        updateScreen('expression', expression);
+        updateScreen('expression', _this.expression);
         updateScreen('operator', '=');
     } else if (_this.operators[value]) {
         // Case + - * /
@@ -73,11 +74,9 @@ function handleClick(value, _this) {
         _this.numStack.push(+checkDot(_this.temp));
         updateScreen('operator', value);
 
-        if (_this.operators[value] < _this.operators[_this.operatorStack[-1]]) {
-            // TODO: handle multiple expression
-            // Case * /
-            var tempResult = calculate(_this.numStack.pop(), value, _this.temp);
-            _this.temp = '' + tempResult;
+        if (_this.operators[value] > _this.operators[_this.operatorStack[_this.operatorStack.length - 1]]) {
+            var tempResult = calculate(_this.numStack.pop(), _this.operatorStack.pop(), _this.numStack.pop());
+            _this.numStack.push(tempResult);
             updateScreen('result', tempResult);
         }
         _this.operatorStack.push(value);
