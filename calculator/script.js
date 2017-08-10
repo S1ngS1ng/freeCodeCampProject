@@ -47,37 +47,44 @@ function handleClick(value, _this) {
     if (!isNaN(value)) {
         // Case Number
         _this.temp += value;
-        updateScreen('result', _this.temp);
+        updateScreen({ result: _this.temp });
     } else if (value === '.') {
         // Case .
         _this.temp = _this.temp || '0' + '.';
-        updateScreen('result', _this.temp);
+        updateScreen({ result: _this.temp });
     } else if (value === 'Backspace') {
         _this.temp = '';
-        updateScreen('result', 0);
+        updateScreen({ result: 0 });
     } else if (value === 'Escape') {
         _this.numStack = [];
         _this.operatorStack = [];
         _this.temp = '';
+        updateScreen({
+            result: 0,
+            expression: '',
+            operator: ''
+        });
         updateScreen('result', 0);
         updateScreen('expression', '');
         updateScreen('operator', '');
     } else if (value === 'Enter' || value === '=') {
         // Case =
         _this.expression = calculateAll(_this);
-        updateScreen('result', _this.temp);
-        updateScreen('expression', _this.expression);
-        updateScreen('operator', '=');
+        updateScreen({
+            result: _this.temp,
+            expression: _this.expression,
+            operator: '='
+        });
     } else if (_this.operators[value]) {
         // Case + - * /
         // Update numStack
         _this.numStack.push(+checkDot(_this.temp));
-        updateScreen('operator', value);
+        updateScreen({ operator: value });
 
         if (_this.operators[value] > _this.operators[_this.operatorStack[_this.operatorStack.length - 1]]) {
             var tempResult = calculate(_this.numStack.pop(), _this.operatorStack.pop(), _this.numStack.pop());
             _this.numStack.push(tempResult);
-            updateScreen('result', tempResult);
+            updateScreen({ result: tempResult });
         }
         _this.operatorStack.push(value);
         _this.temp = '';
@@ -108,6 +115,8 @@ function calculate(num1, operator, num2) {
     return new Function('return ' + num1 + operator + num2)();
 }
 
-function updateScreen(flag, target) {
-    $.one('#screen-' + flag).innerHTML = target;
+function updateScreen(valueObj) {
+    for (var key in valueObj) {
+        $.one('#screen-' + key).innerHTML = valueObj[key];
+    }
 }
