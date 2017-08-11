@@ -66,9 +66,6 @@ function handleClick(value, _this) {
             expression: '',
             operator: ''
         });
-        updateScreen('result', 0);
-        updateScreen('expression', '');
-        updateScreen('operator', '');
     } else if (value === 'Enter' || value === '=') {
         // Case =
         _this.expression = calculateAll(_this);
@@ -115,10 +112,16 @@ function calculateAll(ref) {
 
 function calculate(num1, operator, num2) {
     var result = new Function('return ' + num1 + operator + num2)();
-    // TODO: Get precision
-    if (Math.abs(result.toFixed(?) - result) < epsilon) {
-        return result.toFixed(?);
+    // Calculate decimal sum of both numbers
+    var precision = [num1, num2].reduce(function(accum, current) {
+        return accum + ('' + current).split('.')[1].length;
+    }, 0);
+    // Check if the DELTA exceeds desired epsilon
+    if (Math.abs(result.toFixed(precision) - result) < epsilon) {
+        // Trim trailing 0
+        return parseFloat(result.toFixed(precision));
     }
+    return parseFloat(result);
 }
 
 function updateScreen(valueObj) {
