@@ -8,6 +8,8 @@ var $ = {
     }
 };
 
+var epsilon = Number.EPSILON || 2.220446049250313e-16;
+
 // Use object instead of variable
 // When passing primitive value to function, won't change it outside
 var _ref = {
@@ -112,7 +114,11 @@ function calculateAll(ref) {
 }
 
 function calculate(num1, operator, num2) {
-    return new Function('return ' + num1 + operator + num2)();
+    var result = new Function('return ' + num1 + operator + num2)();
+    // TODO: Get precision
+    if (Math.abs(result.toFixed(?) - result) < epsilon) {
+        return result.toFixed(?);
+    }
 }
 
 function updateScreen(valueObj) {
