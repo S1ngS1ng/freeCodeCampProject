@@ -52,7 +52,7 @@ function handleClick(value, _this) {
         updateScreen({ result: _this.temp });
     } else if (value === '.') {
         // Case .
-        _this.temp = _this.temp || '0' + '.';
+        _this.temp += '.';
         updateScreen({ result: _this.temp });
     } else if (value === 'Backspace') {
         _this.temp = '';
@@ -111,11 +111,11 @@ function calculateAll(ref) {
 }
 
 function calculate(num1, operator, num2) {
-    var result = new Function('return ' + num1 + operator + num2)();
     // Calculate decimal sum of both numbers
-    var precision = [num1, num2].reduce(function(accum, current) {
-        return accum + ('' + current).split('.')[1].length;
-    }, 0);
+    var precision = [num1, num2].map(function(e) {
+        return ('' + e).split('.')
+    }).join('').length;
+    var result = new Function('return ' + num1 + operator + num2)();
     // Check if the DELTA exceeds desired epsilon
     if (Math.abs(result.toFixed(precision) - result) < epsilon) {
         // Trim trailing 0
