@@ -29,6 +29,7 @@ var _ref = {
 // Define all operators, precedence indicated by index
 $.one('#wrapper').addEventListener('click', function (event) {
     var e = event || window.event;
+    console.log(e.target.innerHTML)
     if (e.target.className === 'button') {
         handleClick(e.target.innerHTML, _ref);
         // TODO: Update template here
@@ -54,10 +55,12 @@ function handleClick(value, _this) {
         // Case .
         _this.temp += '.';
         updateScreen({ result: _this.temp });
-    } else if (value === 'Backspace') {
+    } else if (value === 'Backspace' || value === 'C') {
+        // Handle keyboard input and button click
         _this.temp = '';
         updateScreen({ result: 0 });
-    } else if (value === 'Escape') {
+    } else if (value === 'Escape' || value === 'AC') {
+        // Handle keyboard input and button click
         _this.numStack = [];
         _this.operatorStack = [];
         _this.temp = '';
@@ -67,10 +70,10 @@ function handleClick(value, _this) {
             operator: ''
         });
     } else if (value === 'Enter' || value === '=') {
-        // Case =
         _this.expression = calculateAll(_this);
+        // Corner case, check if temp is 0
         updateScreen({
-            result: _this.temp,
+            result: _this.temp || 0,
             expression: _this.expression,
             operator: '='
         });
