@@ -29,7 +29,6 @@ var _ref = {
 // Define all operators, precedence indicated by index
 $.one('#wrapper').addEventListener('click', function (event) {
     var e = event || window.event;
-    console.log(e.target.innerHTML)
     if (e.target.className === 'button') {
         handleClick(e.target.innerHTML, _ref);
         // TODO: Update template here
@@ -53,7 +52,7 @@ function handleClick(value, _this) {
         updateScreen({ result: _this.temp });
     } else if (value === '.') {
         // Case .
-        _this.temp += '.';
+        _this.temp = (_this.temp || 0) + '.';
         updateScreen({ result: _this.temp });
     } else if (value === 'Backspace' || value === 'C') {
         // Handle keyboard input and button click
@@ -69,6 +68,14 @@ function handleClick(value, _this) {
             expression: '',
             operator: ''
         });
+    } else if (value === '+/-') {
+        _this.temp = '-' + _this.temp;
+        if (_this.temp === '-') {
+            // This 0 cannot be appended to _this.temp
+            updateScreen({ result: _this.temp + '0' });
+        } else {
+            updateScreen({ result: _this.temp });
+        }
     } else if (value === 'Enter' || value === '=') {
         _this.expression = calculateAll(_this);
         // Corner case, check if temp is 0
@@ -118,7 +125,8 @@ function calculate(num1, operator, num2) {
     var precision = [num1, num2].map(function(e) {
         return ('' + e).split('.')
     }).join('').length;
-    var result = new Function('return ' + num1 + operator + num2)();
+    // Add extra space to handle negative num2
+    var result = new Function('return ' + num1 + operator + ' ' + num2)();
     // Check if the DELTA exceeds desired epsilon
     if (Math.abs(result.toFixed(precision) - result) < epsilon) {
         // Trim trailing 0
