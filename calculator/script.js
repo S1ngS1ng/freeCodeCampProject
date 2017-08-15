@@ -1,8 +1,4 @@
 var $ = {
-    // TODO: remove?
-    all: function (selector) {
-        return document.querySelectorAll(selector);
-    },
     one: function (selector) {
         return document.querySelector(selector);
     }
@@ -31,7 +27,6 @@ $.one('#wrapper').addEventListener('click', function (event) {
     var e = event || window.event;
     if (e.target.className === 'button') {
         handleClick(e.target.innerHTML, _ref);
-        // TODO: Update template here
     }
 });
 
