@@ -81,8 +81,11 @@ function handleClick(value, _this) {
         });
     } else if (_this.operators[value]) {
         // Case + - * /
-        // Update numStack
-        _this.numStack.push(+checkDot(_this.temp));
+        // Handle multiple operator input that lead to extra calculation
+        if (!isNaN(parseFloat(_this.temp))) {
+            // Update numStack
+            _this.numStack.push(+checkDot(_this.temp));
+        }
         updateScreen({ operator: value });
 
         if (_this.operators[value] > _this.operators[_this.operatorStack[_this.operatorStack.length - 1]]) {
