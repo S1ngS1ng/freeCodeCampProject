@@ -89,8 +89,13 @@ function handleClick(value, _this) {
         updateScreen({ operator: value });
 
         if (_this.operators[value] > _this.operators[_this.operatorStack[_this.operatorStack.length - 1]]) {
-            var tempResult = calculate(_this.numStack.pop(), _this.operatorStack.pop(), _this.numStack.pop());
-            _this.numStack.push(tempResult);
+            var num1 = _this.numStack.pop();
+            var num2 = _this.numStack.pop();
+            var operator = _this.operatorStack.pop();
+            var tempResult = calculate(num1, operator, num2);
+            _this.expression += [num2, operator, num1].join(' ');
+
+            _this.numStack.push({ value: tempResult });
             updateScreen({ result: tempResult });
         }
         _this.operatorStack.push(value);
@@ -107,15 +112,21 @@ function checkDot(numStr) {
 
 function calculateAll(ref) {
     // Set default expression to temp
-    var expression = ref.temp;
+    var operator = ref.operatorStack.pop();
+    ref.expression += (operator + ' ' + ref.temp);
     while (ref.numStack.length > 0) {
         var num = ref.numStack.pop();
-        var operator = ref.operatorStack.pop();
-        // Prepend num and operator to expression
-        expression = [num, operator, ''].join(' ') + expression;
-        ref.temp = calculate(num, operator, +ref.temp);
+        if (typeof num === 'object') {
+            ref.expression += (operator + ' ' + ref.temp);
+            ref.temp = calculate(num.value, operator, +ref.temp);
+        } else {
+
+            ref.expression = [num, operator, ''].join(' ') + ref.expression;
+            ref.temp = calculate(num, operator, +ref.temp);
+            // Prepend num and operator to expression
+        }
     }
-    return expression;
+    return ref.expression;
 }
 
 function calculate(num1, operator, num2) {
