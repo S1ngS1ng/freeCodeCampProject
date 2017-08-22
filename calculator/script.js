@@ -4,6 +4,7 @@ var $ = {
     }
 };
 
+// Polyfill of ES6 Number.EPSILON
 var epsilon = Number.EPSILON || 2.220446049250313e-16;
 
 // Use object instead of variable
@@ -19,7 +20,8 @@ var _ref = {
     numStack: [],
     operatorStack: [],
     temp: '',
-    expression: ''
+    expression: '',
+    composeExpression: composeExpression
 };
 
 // Define all operators, precedence indicated by index
@@ -93,8 +95,7 @@ function handleClick(value, _this) {
             var num2 = _this.numStack.pop();
             var operator = _this.operatorStack.pop();
             var tempResult = calculate(num1, operator, num2);
-            _this.expression += [num2, operator, num1].join(' ');
-
+            _this.composeExpression(num1, operator, num2);
             _this.numStack.push({ value: tempResult });
             updateScreen({ result: tempResult });
         }
@@ -111,20 +112,20 @@ function checkDot(numStr) {
 }
 
 function calculateAll(ref) {
-    // Set default expression to temp
-    var operator = ref.operatorStack.pop();
-    ref.expression += (operator + ' ' + ref.temp);
+    var firstFlag = true;
     while (ref.numStack.length > 0) {
+        var operator = ref.operatorStack.pop();
         var num = ref.numStack.pop();
-        if (typeof num === 'object') {
-            ref.expression += (operator + ' ' + ref.temp);
-            ref.temp = calculate(num.value, operator, +ref.temp);
-        } else {
-
-            ref.expression = [num, operator, ''].join(' ') + ref.expression;
-            ref.temp = calculate(num, operator, +ref.temp);
-            // Prepend num and operator to expression
-        }
+        ref.composeExpression(num.value || num, operator, firstFlag ? +ref.temp : null);
+        ref.temp = calculate(num.value || num, operator, +ref.temp);
+        firstFlag = false;
+        // if (typeof num === 'object') {
+        //     ref.composeExpression(num.value, operator, ref.temp);
+        //     ref.temp = calculate(num.value, operator, +ref.temp);
+        // } else {
+        //     ref.composeExpression(num, operator, ref.temp);
+        //     ref.temp = calculate(num, operator, +ref.temp);
+        // }
     }
     return ref.expression;
 }
@@ -147,5 +148,13 @@ function calculate(num1, operator, num2) {
 function updateScreen(valueObj) {
     for (var key in valueObj) {
         $.one('#screen-' + key).innerHTML = valueObj[key];
+    }
+}
+
+function composeExpression(prevNum, operator, nextNum) {
+    if (nextNum) {
+        this.expression += [prevNum, operator, nextNum, ''].join(' ');
+    } else {
+        this.expression = [prevNum, operator].join(' ') + this.expression
     }
 }
