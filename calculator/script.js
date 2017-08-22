@@ -21,7 +21,7 @@ var _ref = {
     operatorStack: [],
     temp: '',
     expression: '',
-    composeExpression: composeExpression
+    prependExpression: prependExpression
 };
 
 // Define all operators, precedence indicated by index
@@ -90,13 +90,17 @@ function handleClick(value, _this) {
         }
         updateScreen({ operator: value });
 
+        // Higher precedence input operator
         if (_this.operators[value] > _this.operators[_this.operatorStack[_this.operatorStack.length - 1]]) {
             var num1 = _this.numStack.pop();
             var num2 = _this.numStack.pop();
             var operator = _this.operatorStack.pop();
             var tempResult = calculate(num1, operator, num2);
-            _this.composeExpression(num1, operator, num2);
-            _this.numStack.push({ value: tempResult });
+            // Update current element to object
+            _this.numStack.push({
+                value: tempResult,
+                expression: [num2, operator, num1].join(' ')
+            });
             updateScreen({ result: tempResult });
         }
         _this.operatorStack.push(value);
@@ -104,32 +108,26 @@ function handleClick(value, _this) {
     }
 }
 
-function checkDot(numStr) {
-    if (/\.$/.test(numStr)) {
-        return numStr + '0';
-    }
-    return numStr;
-}
-
+// Calculate according to current numStack and operatorStack
 function calculateAll(ref) {
-    var firstFlag = true;
+    // Calculate and compose initial expression
+    var operator = ref.operatorStack.pop();
+    var num = ref.numStack.pop();
+    // Handle when the last element from stack is object
+    ref.expression = [num.value || num, operator, _ref.temp].join(' ');
+    ref.temp = calculate(num.value || num, operator, +ref.temp);
+    // TODO: Recursion?
     while (ref.numStack.length > 0) {
-        var operator = ref.operatorStack.pop();
-        var num = ref.numStack.pop();
-        ref.composeExpression(num.value || num, operator, firstFlag ? +ref.temp : null);
+        operator = ref.operatorStack.pop();
+        num = ref.numStack.pop();
+        // Handle when the last element from stack is object
+        ref.prependExpression(num.expression || num, operator);
         ref.temp = calculate(num.value || num, operator, +ref.temp);
-        firstFlag = false;
-        // if (typeof num === 'object') {
-        //     ref.composeExpression(num.value, operator, ref.temp);
-        //     ref.temp = calculate(num.value, operator, +ref.temp);
-        // } else {
-        //     ref.composeExpression(num, operator, ref.temp);
-        //     ref.temp = calculate(num, operator, +ref.temp);
-        // }
     }
     return ref.expression;
 }
 
+// Calculate expression
 function calculate(num1, operator, num2) {
     // Calculate decimal sum of both numbers
     var precision = [num1, num2].map(function(e) {
@@ -139,22 +137,28 @@ function calculate(num1, operator, num2) {
     var result = new Function('return ' + num1 + operator + ' ' + num2)();
     // Check if the DELTA exceeds desired epsilon
     if (Math.abs(result.toFixed(precision) - result) < epsilon) {
-        // Trim trailing 0
+        // Trim trailing decimal
         return parseFloat(result.toFixed(precision));
     }
     return parseFloat(result);
 }
 
+// Prepend num and operator to existing expression
+function prependExpression(num, operator) {
+    this.expression = num + ' ' + operator + this.expression;
+}
+
+// Update screen node by id
 function updateScreen(valueObj) {
     for (var key in valueObj) {
         $.one('#screen-' + key).innerHTML = valueObj[key];
     }
 }
 
-function composeExpression(prevNum, operator, nextNum) {
-    if (nextNum) {
-        this.expression += [prevNum, operator, nextNum, ''].join(' ');
-    } else {
-        this.expression = [prevNum, operator].join(' ') + this.expression
+// Handle number w/ dot while w/o decimal
+function checkDot(numStr) {
+    if (/\.$/.test(numStr)) {
+        return numStr + '0';
     }
+    return numStr;
 }
