@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <script src="index.js" type="module"></script>
+        <title>Poker game</title>
+    </head>
+    <body>
+        <div id="profile-container">
+            <h2>Welcome <span id="user-name"></span></h2>
+            <h2>Your cash: $<span id="cash"></span></h2>
+        </div>
+
+        <div id="welcome-container">
+            <label for="user-name-input">Please enter your name:</label>
+            <input type="text" id="user-name-input" value="Ninja Cat" />
+            <button id="start">Start</button>
+        </div>
+
+        <div id="bet-container">
+            <label for="bet-range-input">Place your bet:</label>
+            <input type="range" min="1" id="bet-range-input" />
+            <input type="number" id="bet-value" />
+            <button id="set-bet">Set</button>
+        </div>
+
+        <div id="result-container">
+            <div id="bot-result">
+                <ul id="bot-result-list"></ul>
+            </div>
+            <div id="player-result">
+                <ul id="player-result-list"></ul>
+            </div>
+            <div>
+                The winner is <span id="winner"></span>!
+            </div>
+            <div id="cash-result"></div>
+            <div id="action-container">
+                <button id="next">Next</button>
+                <button id="cash-out">Cash out</button>
+            </div>
+        </div>
+    </body>
+</html>
+
