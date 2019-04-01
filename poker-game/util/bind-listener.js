@@ -6,11 +6,12 @@ export default class Listener {
     constructor() {
         this.handler = new Handler();
         // TODO: bind with loop
-        this.tokens = ['start'];
+        this.tokens = ['start', 'bet'];
     }
 
     bind() {
         $('#start').onclick = this.handler.start;
+        $('#bet').onclick = this.handler.bet;
         $('#bet-range-input').oninput = this.handler.betRangeInput;
         $('#bet-value-input').onchange = this.handler.betValueInput;
     }

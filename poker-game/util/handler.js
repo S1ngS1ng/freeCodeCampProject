@@ -2,6 +2,8 @@ import { $, $all } from './query.js';
 // TODO: Alert panel
 // import { setError } from '../lib/alert-panel.js';
 import Session from '../lib/session.js';
+import Generate from '../lib/generate.js';
+import Compare from '../lib/compare.js';
 
 /**
  * Object that contains pairs as in id => content
@@ -22,6 +24,8 @@ import Session from '../lib/session.js';
 export default class Handler {
     constructor() {
         this.session = null;
+        this.generate = new Generate();
+        this.compare = new Compare();
     }
 
     /**
@@ -29,6 +33,14 @@ export default class Handler {
      * @desc Click handler of the #start button
      */
     start = () => {
+        // Show bet container
+        this._setAttr({
+            id: 'bet-container',
+            style: {
+                display: 'block'
+            }
+        });
+
         let userName = $('#user-name-input').value;
 
         if (this.session) {
@@ -41,8 +53,14 @@ export default class Handler {
         }
 
         this.session = new Session(userName);
-        this._setContent({ 'user-name': userName });
 
+        // Set name and cash
+        this._setContent({
+            cash: this.session.cash,
+            'user-name': userName
+        });
+
+        // "Two-way binding" of both (slider and text) input
         this._setAttr({
             id: 'bet-range-input',
             value: 1,
@@ -52,6 +70,14 @@ export default class Handler {
             id: 'bet-value-input',
             value: 1
         });
+
+        // Hide welcome container
+        this._setAttr({
+            id: 'welcome-container',
+            style: {
+                display: 'none'
+            }
+        });
     }
 
     /**
@@ -59,7 +85,31 @@ export default class Handler {
      * @desc Click handler of the #bet button
      */
     bet = () => {
+        // Show result container
+        this._setAttr({
+            id: 'result-container',
+            style: {
+                display: 'block'
+            }
+        });
 
+        let bet = $('#bet-value-input').value;
+
+        // Hide bet container
+        this._setAttr({
+            id: 'bet-container',
+            style: {
+                display: 'none'
+            }
+        })
+
+        this._setContent({ 'bet-in-result': bet });
+
+        let playerHand = this.generate.hand();
+        let botHand = this.generate.hand();
+
+        console.log(playerHand, botHand);
+        console.log(this.compare.isPlayerWinning(playerHand, botHand));
     }
 
     /**
