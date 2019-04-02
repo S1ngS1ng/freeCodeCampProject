@@ -4,6 +4,7 @@ import { $, $all } from './query.js';
 import Session from '../lib/session.js';
 import Generate from '../lib/generate.js';
 import Compare from '../lib/compare.js';
+import ComposeContent from './compose-content.js';
 
 /**
  * Object that contains pairs as in id => content
@@ -26,6 +27,7 @@ export default class Handler {
         this.session = null;
         this.generate = new Generate();
         this.compare = new Compare();
+        this.composeContent = new ComposeContent();
     }
 
     /**
@@ -110,6 +112,11 @@ export default class Handler {
 
         console.log(playerHand, botHand);
         console.log(this.compare.isPlayerWinning(playerHand, botHand));
+
+        this._setContent({
+            'bot-result': this.composeContent.card(botHand, 'bot'),
+            'player-result': this.composeContent.card(playerHand, 'player')
+        });
     }
 
     /**
