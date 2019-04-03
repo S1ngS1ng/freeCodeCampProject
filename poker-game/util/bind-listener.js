@@ -12,6 +12,8 @@ export default class Listener {
     bind() {
         $('#start').onclick = this.handler.start;
         $('#bet').onclick = this.handler.bet;
+        $('#next').onclick = this.handler.next;
+        $('#end').onclick = this.handler.end;
         $('#bet-range-input').oninput = this.handler.betRangeInput;
         $('#bet-value-input').onchange = this.handler.betValueInput;
     }

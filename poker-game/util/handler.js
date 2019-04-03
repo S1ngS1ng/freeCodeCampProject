@@ -1,6 +1,4 @@
 import { $, $all } from './query.js';
-// TODO: Alert panel
-// import { setError } from '../lib/alert-panel.js';
 import Session from '../lib/session.js';
 import Generate from '../lib/generate.js';
 import Compare from '../lib/compare.js';
@@ -25,9 +23,12 @@ import ComposeContent from './compose-content.js';
 export default class Handler {
     constructor() {
         this.session = null;
+        this.Session = Session;
         this.generate = new Generate();
         this.compare = new Compare();
         this.composeContent = new ComposeContent();
+
+        this._hideAll(['cash-container', 'bet-container', 'result-container']);
     }
 
     /**
@@ -35,27 +36,17 @@ export default class Handler {
      * @desc Click handler of the #start button
      */
     start = () => {
-        // Show bet container
-        this._setAttr({
-            id: 'bet-container',
-            style: {
-                display: 'block'
-            }
-        });
+        this._show('bet-container');
 
         let userName = $('#user-name-input').value;
 
-        if (this.session) {
-            setError({
-                user: this.session.user,
-                cash: this.session.cash
-            });
-
-            return;
+        // Check if there is an on-going session
+        // Create one if not
+        if (!this.session) {
+            this.session = new this.Session(userName);
         }
 
-        this.session = new Session(userName);
-
+        this._show('cash-container');
         // Set name and cash
         this._setContent({
             cash: this.session.cash,
@@ -65,21 +56,15 @@ export default class Handler {
         // "Two-way binding" of both (slider and text) input
         this._setAttr({
             id: 'bet-range-input',
-            value: 1,
+            value: Math.ceil(this.session.cash / 4),
             max: this.session.cash
         });
         this._setAttr({
             id: 'bet-value-input',
-            value: 1
+            value: Math.ceil(this.session.cash / 4),
         });
 
-        // Hide welcome container
-        this._setAttr({
-            id: 'welcome-container',
-            style: {
-                display: 'none'
-            }
-        });
+        this._hide('welcome-container')
     }
 
     /**
@@ -87,36 +72,48 @@ export default class Handler {
      * @desc Click handler of the #bet button
      */
     bet = () => {
-        // Show result container
-        this._setAttr({
-            id: 'result-container',
-            style: {
-                display: 'block'
-            }
-        });
+        this._show('result-container');
 
-        let bet = $('#bet-value-input').value;
+        let betValue = +$('#bet-value-input').value;
 
-        // Hide bet container
-        this._setAttr({
-            id: 'bet-container',
-            style: {
-                display: 'none'
-            }
-        })
-
-        this._setContent({ 'bet-in-result': bet });
+        this._hide('bet-container');
+        this._setContent({ 'bet-in-result': betValue });
 
         let playerHand = this.generate.hand();
         let botHand = this.generate.hand();
-
-        console.log(playerHand, botHand);
-        console.log(this.compare.isPlayerWinning(playerHand, botHand));
+        let winnerRef = this.compare.isPlayerWinning(playerHand, botHand);
 
         this._setContent({
-            'bot-result': this.composeContent.card(botHand, 'bot'),
-            'player-result': this.composeContent.card(playerHand, 'player')
+            'bot-result': `Bot: ${this.composeContent.card(botHand, 'bot')}`,
+            'player-result': `You: ${this.composeContent.card(playerHand, 'player')}`
         });
+
+
+        if (winnerRef === 0) {
+            this._setContent({
+                'winner-container': `Draw!`
+            });
+        } else {
+            let userWin = winnerRef > 0;
+
+            // Update winner info and calculate cash
+            if (userWin) {
+                this.session.cash += betValue;
+                this._setContent({
+                    'winner-container': `😄 The winner is you! Yay!`,
+                    'cash-result': `🤑 You won $${betValue}!`
+                });
+            } else {
+                this.session.cash -= betValue;
+                this._setContent({
+                    'winner-container': `😒 The winner is the bot! Darn it!`,
+                    'cash-result': `💸 You lost $${betValue}!`
+                });
+            }
+
+            // Update cash
+            this._setContent({ cash: this.session.cash });
+        }
     }
 
     /**
@@ -124,7 +121,8 @@ export default class Handler {
      * @desc Click handler of the #next button
      */
     next = () => {
-
+        this._hide('result-container');
+        this.start();
     }
 
     /**
@@ -132,7 +130,16 @@ export default class Handler {
      * @desc Click handler of the #end button
      */
     end = () => {
-
+        this._hideAll(['cash-container', 'bet-container', 'result-container']);
+        this._setContent({
+            'user-name': ''
+        });
+        this._setAttr({
+            id: 'user-name-input',
+            value: 'Ninja Cat'
+        });
+        this._show('welcome-container')
+        this.session = null;
     }
 
     /**
@@ -162,8 +169,8 @@ export default class Handler {
     /**
      * @function Handler~_setContent
      * @private
-     * @param {ElementContent} obj - Pairs of id => content
      * @desc Update the content (innerHTML) of each element with `id`
+     * @param {ElementContent} obj - Pairs of id => content
      */
     _setContent(obj) {
         for (let id in obj) {
@@ -174,9 +181,9 @@ export default class Handler {
     /**
      * @function Handler~_setAttr
      * @private
+     * @desc Update the value(s) for the attribute(s) within the element of ${id}
      * @param {String} id - The id of a DOM element
      * @param {AttrValue} obj - Rest of the parameter, which are pairs of attr => value
-     * @desc Update the value(s) for the attribute(s) within the element of ${id}
      */
     _setAttr({ id, ...pairs }) {
         let ref = $(`#${id}`);
@@ -190,6 +197,53 @@ export default class Handler {
                 ref[attr] = pairs[attr];
             }
         }
+    }
+
+    /**
+     * @function Handler~_hide
+     * @private
+     * @desc Hide element of id
+     * @param {String} id - The id of an element that should be hidden
+     */
+    _hide(id) {
+        this._setAttr({
+            id,
+            style: {
+                display: 'none'
+            }
+        });
+    }
+
+    /**
+     * @function Handler~_hideAll
+     * @private
+     * @desc Hide all elements based on the id list passed in
+     * @param {String[]} idList - The id(s) of the element(s) that should be hidden
+     */
+    _hideAll(idList) {
+        for (let i = 0; i < idList.length; i++) {
+            this._setAttr({
+                id: idList[i],
+                style: {
+                    display: 'none'
+                }
+            });
+        }
+    }
+
+    /**
+     * @function Handler~_show
+     * @private
+     * @desc Show element of di
+     * @param {String} id - The id of an element that should be displayed
+     */
+    _show(id) {
+        this._setAttr({
+            id,
+            style: {
+                display: 'block'
+            }
+        });
     }
 }
 
