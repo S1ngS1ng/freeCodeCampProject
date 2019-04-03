@@ -88,7 +88,6 @@ export default class Handler {
             'player-result': `You: ${this.composeContent.card(playerHand, 'player')}`
         });
 
-
         if (winnerRef === 0) {
             this._setContent({
                 'winner-container': `Draw!`
@@ -111,9 +110,18 @@ export default class Handler {
                 });
             }
 
-            // Update cash
             this._setContent({ cash: this.session.cash });
+            this._checkBalance(this.session.cash);
         }
+    }
+
+    /**
+     * @function Handler~refill
+     * @desc Click handler of the #refill button, add $100 to cash
+     */
+    refill = () => {
+        this.session.cash += 100;
+        this.start();
     }
 
     /**
@@ -164,6 +172,21 @@ export default class Handler {
             id: 'bet-range-input',
             value: e.target.value
         });
+    }
+
+    /**
+     * @function Handler~_checkBalance
+     * @private
+     * @desc Check the remaining cash, determine which action button to display
+     */
+    _checkBalance(cash) {
+        if (cash > 0) {
+            this._hide('refill');
+            this._show('next');
+        } else {
+            this._hide('next');
+            this._show('refill');
+        }
     }
 
     /**

@@ -30,12 +30,6 @@ export default class Compare {
         const { values: playerValues, rank: playerRank } = this._calculateHandRank(playerHand);
         const { values: botValues, rank: botRank } = this._calculateHandRank(botHand);
 
-        console.log('Player hand: ', playerHand)
-        console.log('Bot hand: ', botHand)
-
-        console.log(playerValues, `Player Rank point: ${playerRank}`)
-        console.log(botValues, `Bot Rank point: ${botRank}`)
-
         if (playerRank !== botRank) {
             return playerRank > botRank ? 1 : -1;
         }
