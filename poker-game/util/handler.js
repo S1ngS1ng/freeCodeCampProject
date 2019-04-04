@@ -38,7 +38,7 @@ export default class Handler {
     start = () => {
         this._show('bet-container');
 
-        let userName = $('#user-name-input').value;
+        let userName = $('#user-name-input').value || 'Ninja Cat';
 
         // Check if there is an on-going session
         // Create one if not
@@ -84,8 +84,8 @@ export default class Handler {
         let winnerRef = this.compare.isPlayerWinning(playerHand, botHand);
 
         this._setContent({
-            'bot-result': `Bot: ${this.composeContent.card(botHand, 'bot')}`,
-            'player-result': `You: ${this.composeContent.card(playerHand, 'player')}`
+            'bot-result': `<h3>Bot</h3> ${this.composeContent.card(botHand, 'bot')}`,
+            'player-result': `<h3>You</h3> ${this.composeContent.card(playerHand, 'player')}`
         });
 
         if (winnerRef === 0) {
@@ -257,14 +257,15 @@ export default class Handler {
     /**
      * @function Handler~_show
      * @private
-     * @desc Show element of di
+     * @desc Show element of id
      * @param {String} id - The id of an element that should be displayed
+     *     If the id is ending with 'container', set `display` to 'flex'
      */
     _show(id) {
         this._setAttr({
             id,
             style: {
-                display: 'block'
+                display: /container$/.test(id) ? 'flex' : 'block'
             }
         });
     }

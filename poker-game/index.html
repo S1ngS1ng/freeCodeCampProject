@@ -4,34 +4,54 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
         <script src="index.js" type="module"></script>
+        <link rel="stylesheet" href="style.css">
         <title>Poker game</title>
     </head>
     <body>
         <div id="profile-container">
             <h2>Welcome <span id="user-name"></span></h2>
-            <h2 id="cash-container">Your cash: $<span id="cash"></span></h2>
+            <span
+                id="cash-container"
+                class="mdl-chip mdl-chip--contact"
+            >
+                <span class="mdl-chip__contact mdl-color--teal mdl-color-text--white">$</span>
+                <span id="cash" class="mdl-chip__text"></span>
+            </span>
         </div>
 
         <div id="welcome-container">
-            <label for="user-name-input">Please enter your name:</label>
-            <input type="text" id="user-name-input" value="Ninja Cat" />
-            <button id="start">Start</button>
+            <div class="mdl-textfield mdl-js-textfield">
+                <input type="text" class="mdl-textfield__input"
+                    id="user-name-input" />
+                <label for="user-name-input"
+                    class="mdl-textfield__label">
+                    Please enter your name:
+                </label>
+            </div>
+            <button id="start" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Start</button>
         </div>
 
         <div id="bet-container">
             <label for="bet-range-input">Place your bet:</label>
-            <input type="range" min="1" id="bet-range-input" />
-            <input type="number" id="bet-value-input" />
+            <input type="range" min="1"
+                class="mdl-slider mdl-js-slider"
+                id="bet-range-input" />
+            <input type="number" id="bet-value-input"
+                class="mdl-textfield__input" />
             <button id="bet">Bet</button>
         </div>
 
         <div id="result-container">
             <h3>Your bet is $<span id="bet-in-result"></span>. Good luck!</h3>
-            <div id="bot-result"></div>
-            <div id="player-result"></div>
-            <div id="winner-container"></div>
-            <div id="cash-result"></div>
+            <div id="poker-table-container">
+                <div id="bot-result"></div>
+                <div id="player-result"></div>
+                <div id="winner-container"></div>
+                <div id="cash-result"></div>
+            </div>
             <div id="action-container">
                 <button id="next">Next</button>
                 <button id="refill">Refill $100</button>
