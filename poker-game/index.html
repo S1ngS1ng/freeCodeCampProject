@@ -31,17 +31,23 @@
                     Please enter your name:
                 </label>
             </div>
-            <button id="start" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored">Start</button>
+            <button id="start"
+                class="mdl-button mdl-js-button mdl-button--primary">
+                Start
+            </button>
         </div>
 
         <div id="bet-container">
             <label for="bet-range-input">Place your bet:</label>
             <input type="range" min="1"
-                class="mdl-slider mdl-js-slider"
-                id="bet-range-input" />
+                id="bet-range-input"
+                class="mdl-slider mdl-js-slider" />
             <input type="number" id="bet-value-input"
                 class="mdl-textfield__input" />
-            <button id="bet">Bet</button>
+            <button id="bet"
+                class="mdl-button mdl-js-button mdl-button--primary">
+                Bet
+            </button>
         </div>
 
         <div id="result-container">
@@ -53,9 +59,18 @@
                 <div id="cash-result"></div>
             </div>
             <div id="action-container">
-                <button id="next">Next</button>
-                <button id="refill">Refill $100</button>
-                <button id="end">End</button>
+                <button id="end"
+                    class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+                    End
+                </button>
+                <button id="next"
+                    class="mdl-button mdl-js-button mdl-button--primary">
+                    Next
+                </button>
+                <button id="refill"
+                    class="mdl-button mdl-js-button mdl-button--primary">
+                    Refill $100
+                </button>
             </div>
         </div>
     </body>

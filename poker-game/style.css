@@ -9,6 +9,7 @@ body {
   align-items: center;
 }
 #profile-container #cash-container {
+  display: none;
   margin-left: 10rem;
 }
 
@@ -17,12 +18,9 @@ body {
   justify-content: center;
   align-items: center;
 }
-#welcome-container #start {
-  margin-left: 1rem;
-}
 
 #bet-container {
-  display: flex;
+  display: none;
   justify-content: center;
   align-items: center;
 }
@@ -31,7 +29,7 @@ body {
 }
 
 #result-container {
-  display: flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
 }

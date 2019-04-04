@@ -9,6 +9,9 @@ body {
     align-items: center;
 
     #cash-container {
+        // Hide at initial loading
+        // flex later on
+        display: none;
         margin-left: 10rem;
     }
 }
@@ -17,14 +20,12 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-
-    #start {
-        margin-left: 1rem;
-    }
 }
 
 #bet-container {
-    display: flex;
+    // Hide at initial loading
+    // flex later on
+    display: none;
     justify-content: center;
     align-items: center;
 
@@ -34,7 +35,9 @@ body {
 }
 
 #result-container {
-    display: flex;
+    // Hide at initial loading
+    // flex later on
+    display: none;
     flex-direction: column;
     justify-content: center;
 

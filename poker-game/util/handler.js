@@ -37,6 +37,7 @@ export default class Handler {
      */
     start = () => {
         this._show('bet-container');
+        this._hide('result-container');
 
         let userName = $('#user-name-input').value || 'Ninja Cat';
 
