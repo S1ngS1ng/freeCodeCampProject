@@ -1,3 +1,5 @@
+/* Card style CTTO: https://codepen.io/twhy/pen/mwRRdX */
+
 body {
     display: flex;
     flex-direction: column;
@@ -77,6 +79,10 @@ body {
                     height: 6rem;
                     margin: 1rem;
                     position: relative;
+                    transition: .6s;
+                    transform-style: preserve-3d;
+                    border-radius: 6px;
+                    border: 1px solid #ccc;
 
                     .poker-hand-card-front,
                     .poker-hand-card-back {
@@ -99,6 +105,9 @@ body {
 
                     .poker-hand-card-front {
                         background: white;
+                        -webkit-transform: rotateY(180deg);
+                        -ms-transform: rotateY(180deg);
+                        transform: rotateY(180deg);
 
                         .poker-hand-card-suit {
                             // Or else, emoji won't render as expected
@@ -125,7 +134,6 @@ body {
                             bottom: 0;
                             right: 0.5rem;
                         }
-
                     }
                 }
             }

@@ -1,3 +1,4 @@
+/* Card style CTTO: https://codepen.io/twhy/pen/mwRRdX */
 body {
   display: flex;
   flex-direction: column;
@@ -67,6 +68,10 @@ body {
   height: 6rem;
   margin: 1rem;
   position: relative;
+  transition: 0.6s;
+  transform-style: preserve-3d;
+  border-radius: 6px;
+  border: 1px solid #ccc;
 }
 #result-container #poker-table-container #bot-result-container .poker-hand-result .poker-hand-result-item .poker-hand-card-front,
 #result-container #poker-table-container #bot-result-container .poker-hand-result .poker-hand-result-item .poker-hand-card-back, #result-container #poker-table-container #player-result-container .poker-hand-result .poker-hand-result-item .poker-hand-card-front,
@@ -88,6 +93,9 @@ body {
 }
 #result-container #poker-table-container #bot-result-container .poker-hand-result .poker-hand-result-item .poker-hand-card-front, #result-container #poker-table-container #player-result-container .poker-hand-result .poker-hand-result-item .poker-hand-card-front {
   background: white;
+  -webkit-transform: rotateY(180deg);
+  -ms-transform: rotateY(180deg);
+  transform: rotateY(180deg);
 }
 #result-container #poker-table-container #bot-result-container .poker-hand-result .poker-hand-result-item .poker-hand-card-front .poker-hand-card-suit, #result-container #poker-table-container #player-result-container .poker-hand-result .poker-hand-result-item .poker-hand-card-front .poker-hand-card-suit {
   font-family: "";

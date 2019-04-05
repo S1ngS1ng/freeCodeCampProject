@@ -89,6 +89,8 @@ export default class Handler {
             'player-result': this.composeContent.card(playerHand, 'player')
         });
 
+        this._showCard();
+
         if (winnerRef === 0) {
             this._setContent({
                 'winner-text': `Draw!`
@@ -188,6 +190,32 @@ export default class Handler {
             this._hide('next');
             this._show('refill');
         }
+    }
+
+    /**
+     * @function Handler~_showCard
+     * @private
+     * @desc Show each card after one second
+     */
+    _showCard = () => {
+        const cards = $all('.poker-hand-result-item');
+
+        cards.forEach((card, index) => {
+            this._rotate(card, index * 1000);
+        });
+    }
+
+    /**
+     * @function Handler~_rotate
+     * @private
+     * @param {Object} item - The DOM ref of a card
+     * @param {Number} timeout - The timeout to be set
+     * @desc Add rotateY transform to card, excuted after the given time period
+     */
+    _rotate = (item, timeout) => {
+        setTimeout(() => {
+            item.style.transform = 'rotateY(180deg)';
+        }, timeout);
     }
 
     /**
