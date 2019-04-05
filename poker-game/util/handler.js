@@ -85,13 +85,13 @@ export default class Handler {
         let winnerRef = this.compare.isPlayerWinning(playerHand, botHand);
 
         this._setContent({
-            'bot-result': `<h3>Bot</h3> ${this.composeContent.card(botHand, 'bot')}`,
-            'player-result': `<h3>You</h3> ${this.composeContent.card(playerHand, 'player')}`
+            'bot-result': this.composeContent.card(botHand, 'bot'),
+            'player-result': this.composeContent.card(playerHand, 'player')
         });
 
         if (winnerRef === 0) {
             this._setContent({
-                'winner-container': `Draw!`
+                'winner-text': `Draw!`
             });
         } else {
             let userWin = winnerRef > 0;
@@ -100,13 +100,13 @@ export default class Handler {
             if (userWin) {
                 this.session.cash += betValue;
                 this._setContent({
-                    'winner-container': `😄 The winner is you! Yay!`,
+                    'winner-text': `😄 The winner is you! Yay!`,
                     'cash-result': `🤑 You won $${betValue}!`
                 });
             } else {
                 this.session.cash -= betValue;
                 this._setContent({
-                    'winner-container': `😒 The winner is the bot! Darn it!`,
+                    'winner-text': `😒 The winner is the bot! Darn it!`,
                     'cash-result': `💸 You lost $${betValue}!`
                 });
             }

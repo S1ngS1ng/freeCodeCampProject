@@ -17,10 +17,10 @@
 export default class ComposeContent {
     constructor() {
         this.suitMap = {
-            S: '♠',
-            H: '♥',
-            C: '♦',
-            D: '♣'
+            S: '♠️',
+            H: '♥️',
+            C: '♣️',
+            D: '♦️'
         }
     }
 
@@ -34,26 +34,35 @@ export default class ComposeContent {
      * @return {String<HTML>} - The HTML content of the poker hand
      */
     card(cardList, owner) {
-        let cardContent = cardList.map(card => ({
-            name: 'li',
-            className: 'poker-hand-list-item',
-            content: [{
-                name: 'span',
-                className: 'poker-hand-card-value',
-                content: card.value
-            }, {
-                name: 'span',
-                className: 'poker-hand-card-suit',
-                content: this.suitMap[card.suit]
-            }]
-        }));
-
         return this._tag({
-            name: 'ul',
-            className: 'poker-hand-list',
-            idName: `poker-hand-${owner}`,
-            content: cardContent
-        })
+            name: 'div',
+            className: 'poker-hand-result',
+            content: cardList.map(card => ({
+                name: 'div',
+                className: 'poker-hand-result-item',
+                content: [{
+                    name: 'div',
+                    className: 'poker-hand-card-front',
+                    content: [{
+                        name: 'div',
+                        className: 'poker-hand-card-value-top',
+                        content: card.value
+                    }, {
+                        name: 'div',
+                        className: 'poker-hand-card-suit',
+                        content: this.suitMap[card.suit]
+                    }, {
+                        name: 'div',
+                        className: 'poker-hand-card-value-bottom',
+                        content: card.value
+                    }]
+                }, {
+                    name: 'div',
+                    className: 'poker-hand-card-back',
+                    content: ''
+                }]
+            }))
+        });
     }
 
 
