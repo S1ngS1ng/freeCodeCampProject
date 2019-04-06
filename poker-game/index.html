@@ -40,10 +40,11 @@
         <div id="bet-container">
             <label for="bet-range-input">Place your bet:</label>
             <input type="range" min="1"
-                id="bet-range-input"
-                class="mdl-slider mdl-js-slider" />
-            <input type="number" id="bet-value-input"
-                class="mdl-textfield__input" />
+                class="mdl-slider mdl-js-slider"
+                id="bet-range-input" />
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="bet-value-input">
+                <input type="number" class="mdl-textfield__input" id="bet-value-input-val"/>
+            </div>
             <button id="bet"
                 class="mdl-button mdl-js-button mdl-button--primary">
                 Bet

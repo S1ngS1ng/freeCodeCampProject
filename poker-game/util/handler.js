@@ -15,6 +15,12 @@ import ComposeContent from './compose-content.js';
  * @property {String} ${attr} - The value(s) to be updated for the attribute(s) of a given DOM element
  * @property {AttrValue} [style] - The style attribute and value that to be applied on a given DOM element
  */
+/**
+ * Object used for setting result content
+ * @typedef {Object} ResultContent
+ * @property {String} winnerContent - The content to be displayed as winner info
+ * @property {String} cashContent - The content to be displayed as cash change info
+ */
 
 /**
  * @module Handler
@@ -55,15 +61,14 @@ export default class Handler {
         });
 
         // "Two-way binding" of both (slider and text) input
+        // See: https://getmdl.io/components/index.html#sliders-section
+        $('#bet-range-input').MaterialSlider.change(+Math.ceil(this.session.cash / 4));
         this._setAttr({
             id: 'bet-range-input',
-            value: Math.ceil(this.session.cash / 4),
             max: this.session.cash
         });
-        this._setAttr({
-            id: 'bet-value-input',
-            value: Math.ceil(this.session.cash / 4),
-        });
+
+        $('#bet-value-input').MaterialTextfield.change(+Math.ceil(this.session.cash / 4));
 
         this._hide('welcome-container')
     }
@@ -74,8 +79,9 @@ export default class Handler {
      */
     bet = () => {
         this._show('result-container');
+        this._hide('result-text-container');
 
-        let betValue = +$('#bet-value-input').value;
+        let betValue = +$('#bet-value-input-val').value;
 
         this._hide('bet-container');
         this._setContent({ 'bet-in-result': betValue });
@@ -92,8 +98,9 @@ export default class Handler {
         this._showCard();
 
         if (winnerRef === 0) {
-            this._setContent({
-                'winner-text': `Draw!`
+            this._showResult({
+                winnerContent: '😉 Draw!',
+                cashContent: '😌 Nothing changed!'
             });
         } else {
             let userWin = winnerRef > 0;
@@ -101,15 +108,15 @@ export default class Handler {
             // Update winner info and calculate cash
             if (userWin) {
                 this.session.cash += betValue;
-                this._setContent({
-                    'winner-text': `😄 The winner is you! Yay!`,
-                    'cash-result': `🤑 You won $${betValue}!`
+                this._showResult({
+                    winnerContent: `😄 The winner is you! Yay!`,
+                    cashContent: `🤑 You won $${betValue}!`
                 });
             } else {
                 this.session.cash -= betValue;
-                this._setContent({
-                    'winner-text': `😒 The winner is the bot! Darn it!`,
-                    'cash-result': `💸 You lost $${betValue}!`
+                this._showResult({
+                    winnerContent: `😒 The winner is the bot! Darn it!`,
+                    cashContent: `💸 You lost $${betValue}!`
                 });
             }
 
@@ -159,10 +166,7 @@ export default class Handler {
      * @param {Object} e - The event object
      */
     betRangeInput = e => {
-        this._setAttr({
-            id: 'bet-value-input',
-            value: e.target.value
-        });
+        $('#bet-value-input').MaterialTextfield.change(+e.target.value);
     }
 
     /**
@@ -171,10 +175,7 @@ export default class Handler {
      * @param {Object} e - The event object
      */
     betValueInput = e => {
-        this._setAttr({
-            id: 'bet-range-input',
-            value: e.target.value
-        });
+        $('#bet-range-input').MaterialSlider.change(+e.target.value);
     }
 
     /**
@@ -204,6 +205,24 @@ export default class Handler {
             this._rotate(card, index * 1000);
         });
     }
+
+    /**
+     * @function Handler~_showResult
+     * @private
+     * @param {ResultContent} - The object contains content of result
+     * @desc Set content while result container is hidden. Reveal result after 10 seconds
+     */
+    _showResult = ({ winnerContent, cashContent }) => {
+        this._setContent({
+            'winner-text': winnerContent,
+            'cash-result': cashContent
+        });
+
+        setTimeout(() => {
+            this._show('result-text-container');
+        }, 10000);
+    }
+
 
     /**
      * @function Handler~_rotate

@@ -30,6 +30,7 @@ body {
     display: none;
     justify-content: center;
     align-items: center;
+    font-size: 2rem;
 
     #bet-value-input {
         width: 3rem;
@@ -140,6 +141,14 @@ body {
         }
     }
 
+    #result-text-container {
+        font-size: 2.4rem;
+        line-height: 1.5;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 
     #action-container {
         display: flex;
