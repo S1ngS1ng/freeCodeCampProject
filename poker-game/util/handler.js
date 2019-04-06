@@ -79,11 +79,10 @@ export default class Handler {
      */
     bet = () => {
         this._show('result-container');
-        this._hide('result-text-container');
+        this._hideAll(['bet-container', 'result-text-container', 'action-container']);
 
         let betValue = +$('#bet-value-input-val').value;
 
-        this._hide('bet-container');
         this._setContent({ 'bet-in-result': betValue });
 
         let playerHand = this.generate.hand();
@@ -120,7 +119,6 @@ export default class Handler {
                 });
             }
 
-            this._setContent({ cash: this.session.cash });
             this._checkBalance(this.session.cash);
         }
     }
@@ -181,16 +179,21 @@ export default class Handler {
     /**
      * @function Handler~_checkBalance
      * @private
-     * @desc Check the remaining cash, determine which action button to display
+     * @desc Check the remaining cash, determine which action button to display after 10 seconds
      */
     _checkBalance(cash) {
         if (cash > 0) {
             this._hide('refill');
             this._show('next');
         } else {
-            this._hide('next');
-            this._show('refill');
+            setTimeout(() => {
+                this._hide('next');
+                this._show('refill');
+            }, 10000);
         }
+        setTimeout(() => {
+            this._show('action-container');
+        }, 10000);
     }
 
     /**
@@ -209,8 +212,8 @@ export default class Handler {
     /**
      * @function Handler~_showResult
      * @private
+     * @desc Set content while result container is hidden. Reveal result and update cash after 10 seconds
      * @param {ResultContent} - The object contains content of result
-     * @desc Set content while result container is hidden. Reveal result after 10 seconds
      */
     _showResult = ({ winnerContent, cashContent }) => {
         this._setContent({
@@ -220,6 +223,7 @@ export default class Handler {
 
         setTimeout(() => {
             this._show('result-text-container');
+            this._setContent({ cash: this.session.cash });
         }, 10000);
     }
 
