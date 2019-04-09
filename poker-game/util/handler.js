@@ -68,7 +68,9 @@ export default class Handler {
             max: this.session.cash
         });
 
-        $('#bet-value-input').MaterialTextfield.change(+Math.ceil(this.session.cash / 4));
+        this._setContent({
+            'bet-value-input-val': +Math.ceil(this.session.cash / 4)
+        });
 
         this._hide('welcome-container')
     }
@@ -81,7 +83,7 @@ export default class Handler {
         this._show('result-container');
         this._hideAll(['bet-container', 'result-text-container', 'action-container']);
 
-        let betValue = +$('#bet-value-input-val').value;
+        let betValue = +$('#bet-range-input').value;
 
         this._setContent({ 'bet-in-result': betValue });
 
@@ -164,16 +166,9 @@ export default class Handler {
      * @param {Object} e - The event object
      */
     betRangeInput = e => {
-        $('#bet-value-input').MaterialTextfield.change(+e.target.value);
-    }
-
-    /**
-     * @function Handler~betValueInput
-     * @desc Change handler of the #bet-value-input textbox
-     * @param {Object} e - The event object
-     */
-    betValueInput = e => {
-        $('#bet-range-input').MaterialSlider.change(+e.target.value);
+        this._setContent({
+            'bet-value-input-val': +e.target.value
+        });
     }
 
     /**

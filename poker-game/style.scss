@@ -1,9 +1,16 @@
 /* Card style CTTO: https://codepen.io/twhy/pen/mwRRdX */
+/* Chip token style CTTO: http://cssdeck.com/labs/pokerchips */
 
 body {
     display: flex;
     flex-direction: column;
 }
+
+
+.mdl-chip__text {
+    font-size: 1.5rem;
+}
+
 
 #profile-container {
     display: flex;
@@ -32,8 +39,21 @@ body {
     align-items: center;
     font-size: 2rem;
 
-    #bet-value-input {
-        width: 3rem;
+    #bet-value-container {
+        border: 1px solid #dedede;
+        margin: 0 1rem;
+    }
+
+    #mdl-chip__token {
+        font-size: 0.5rem;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        background-color: #dd4631;
+        border-radius: 50%;
+        border: 0.5em dashed white;
+        transition: all 0.5s ease;
+        backface-visibility: hidden;
     }
 }
 

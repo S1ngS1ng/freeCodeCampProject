@@ -13,7 +13,6 @@ export default class Listener {
             $(`#${token}`).onclick = this.handler[token];
         });
         $('#bet-range-input').oninput = this.handler.betRangeInput;
-        $('#bet-value-input').onchange = this.handler.betValueInput;
     }
 }
 

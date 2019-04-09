@@ -42,9 +42,13 @@
             <input type="range" min="1"
                 class="mdl-slider mdl-js-slider"
                 id="bet-range-input" />
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" id="bet-value-input">
-                <input type="number" class="mdl-textfield__input" id="bet-value-input-val"/>
-            </div>
+            <span
+                id="bet-value-container"
+                class="mdl-chip mdl-chip--contact"
+            >
+                <span class="mdl-chip__contact" id="mdl-chip__token"></span>
+                <span id="bet-value-input-val" class="mdl-chip__text"></span>
+            </span>
             <button id="bet"
                 class="mdl-button mdl-js-button mdl-button--primary">
                 Bet
