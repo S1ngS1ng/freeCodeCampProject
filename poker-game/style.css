@@ -137,6 +137,14 @@ body {
   bottom: 0;
   right: 0.5rem;
 }
+#result-container #result-rank-container {
+  font-size: 1.8rem;
+  line-height: 1.5;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 #result-container #result-text-container {
   font-size: 2.4rem;
   line-height: 1.5;

@@ -30,8 +30,12 @@ export default class Compare {
         const { values: playerValues, rank: playerRank } = this._calculateHandRank(playerHand);
         const { values: botValues, rank: botRank } = this._calculateHandRank(botHand);
 
+        let result = { playerRank, botRank };
+
         if (playerRank !== botRank) {
-            return playerRank > botRank ? 1 : -1;
+            return Object.assign(result, {
+                val: playerRank > botRank ? 1 : -1
+            });
         }
 
         let index = 0;
@@ -40,16 +44,20 @@ export default class Compare {
             let playerCurr = playerValues[index];
             let botCurr = botValues[index];
             if (playerCurr !== botCurr) {
-                return this._comparator(playerCurr, botCurr);
+                return Object.assign(result, {
+                    val: this._comparator(playerCurr, botCurr)
+                });
             }
             index++;
         }
 
-        return 0;
+        return Object.assign(result, {
+            val: 0
+        });
     }
 
     /**
-     * @function Handler~_getPoint
+     * @function Compare~_getPoint
      * @private
      * @desc Get the point of a card. 2 ~ 10 as is, J ~ A as in 11 ~ 14
      * @param {CardValue} val - The card value
@@ -64,7 +72,7 @@ export default class Compare {
     }
 
     /**
-     * @function Handler~_isLargerThan
+     * @function Compare~_isLargerThan
      * @private
      * @desc Compare two card values passed in
      * @param {CardValue} a - The card value
@@ -85,7 +93,7 @@ export default class Compare {
     }
 
     /**
-     * @function Handler~_comparator
+     * @function Compare~_comparator
      * @private
      * @desc A wrapper of _isLargerThan, where a transform function of bool => 1 or -1 has been passed in
      *     This may be used as the callback of sort function
@@ -102,7 +110,7 @@ export default class Compare {
      * @property {Object} value - The value count object of the poker hand
      */
     /**
-     * @function Handler~_generateHandObj
+     * @function Compare~_generateHandObj
      * @private
      * @desc Sort poker hand values, calculate suit count and value count for rank determination
      * @param {Poker[]} cardList - The poker hand array to be calculated
@@ -154,7 +162,7 @@ export default class Compare {
      *     - 9: Straight flush/Royal flush
      */
     /**
-     * @function Handler~_calculateHandRank
+     * @function Compare~_calculateHandRank
      * @private
      * @desc Calculate poker hand rank point
      * @param {HandObj} - The hand object to be calculated
@@ -206,7 +214,7 @@ export default class Compare {
     }
 
     /**
-     * @function Handler~_constructSortedValue
+     * @function Compare~_constructSortedValue
      * @private
      * @desc Sort the card value array (no dupes) based on both value count (descendingly) and value point (descendingly)
      *     This array is for further comparison when two poker hands have the same rank point
@@ -233,7 +241,7 @@ export default class Compare {
     }
 
     /**
-     * @function Handler~_isStraight
+     * @function Compare~_isStraight
      * @private
      * @desc Check if a poker hand is straight
      * @param {HandObj~value} values - The object of cardValue => count
@@ -254,7 +262,7 @@ export default class Compare {
     }
 
     /**
-     * @function Handler~_isFlush
+     * @function Compare~_isFlush
      * @private
      * @desc Check if a poker hand is flush
      * @param {HandObj~suit} suit - The object of suit => count

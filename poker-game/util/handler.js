@@ -18,8 +18,10 @@ import ComposeContent from './compose-content.js';
 /**
  * Object used for setting result content
  * @typedef {Object} ResultContent
- * @property {String} winnerContent - The content to be displayed as winner info
+ * @property {Number} botRank - The number that represents the type of bot's poker hand
  * @property {String} cashContent - The content to be displayed as cash change info
+ * @property {Number} playerRank - The number that represents the type of player's poker hand
+ * @property {String} winnerContent - The content to be displayed as winner info
  */
 
 /**
@@ -33,8 +35,19 @@ export default class Handler {
         this.generate = new Generate();
         this.compare = new Compare();
         this.composeContent = new ComposeContent();
+        this.rankMap = {
+            1: 'High card',
+            2: 'Pair',
+            3: 'Two pairs',
+            4: 'Three of a kind',
+            5: 'Straight',
+            6: 'Flush',
+            7: 'Full house',
+            8: 'Four of a kind',
+            9: 'Straight flush/Royal flush'
+        };
 
-        this._hideAll(['cash-container', 'bet-container', 'result-container']);
+        this._hideAll(['cash-container', 'bet-container', 'result-container', 'result-rank-container']);
     }
 
     /**
@@ -81,7 +94,7 @@ export default class Handler {
      */
     bet = () => {
         this._show('result-container');
-        this._hideAll(['bet-container', 'result-text-container', 'action-container']);
+        this._hideAll(['bet-container', 'result-text-container', 'action-container', 'result-rank-container', 'bot-rank', 'player-rank']);
 
         let betValue = +$('#bet-range-input').value;
 
@@ -89,7 +102,11 @@ export default class Handler {
 
         let playerHand = this.generate.hand();
         let botHand = this.generate.hand();
-        let winnerRef = this.compare.isPlayerWinning(playerHand, botHand);
+        let { botRank, playerRank, val: winnerRef } = this.compare.isPlayerWinning(playerHand, botHand);
+        let result = {
+            botRank: this.rankMap[botRank],
+            playerRank: this.rankMap[playerRank],
+        };
 
         this._setContent({
             'bot-result': this.composeContent.card(botHand, 'bot'),
@@ -99,26 +116,26 @@ export default class Handler {
         this._showCard();
 
         if (winnerRef === 0) {
-            this._showResult({
+            this._showResult(Object.assign(result, {
                 winnerContent: '😉 Draw!',
                 cashContent: '😌 Nothing changed!'
-            });
+            }));
         } else {
             let userWin = winnerRef > 0;
 
             // Update winner info and calculate cash
             if (userWin) {
                 this.session.cash += betValue;
-                this._showResult({
-                    winnerContent: `😄 The winner is you! Yay!`,
+                this._showResult(Object.assign(result, {
+                    winnerContent: `😄 You're the winner! Yay!`,
                     cashContent: `🤑 You won $${betValue}!`
-                });
+                }));
             } else {
                 this.session.cash -= betValue;
-                this._showResult({
-                    winnerContent: `😒 The winner is the bot! Darn it!`,
+                this._showResult(Object.assign(result, {
+                    winnerContent: `😒 The bot won! Darn it!`,
                     cashContent: `💸 You lost $${betValue}!`
-                });
+                }));
             }
 
             this._checkBalance(this.session.cash);
@@ -174,7 +191,7 @@ export default class Handler {
     /**
      * @function Handler~_checkBalance
      * @private
-     * @desc Check the remaining cash, determine which action button to display after 10 seconds
+     * @desc Check the remaining cash, determine which action button to display after 5 seconds
      */
     _checkBalance(cash) {
         if (cash > 0) {
@@ -184,42 +201,57 @@ export default class Handler {
             setTimeout(() => {
                 this._hide('next');
                 this._show('refill');
-            }, 10000);
+            }, 5000);
         }
         setTimeout(() => {
             this._show('action-container');
-        }, 10000);
+        }, 5000);
     }
 
     /**
      * @function Handler~_showCard
      * @private
-     * @desc Show each card after one second
+     * @desc Show each card after half of a second
      */
     _showCard = () => {
         const cards = $all('.poker-hand-result-item');
 
         cards.forEach((card, index) => {
-            this._rotate(card, index * 1000);
+            this._rotate(card, index * 500);
         });
     }
 
     /**
      * @function Handler~_showResult
      * @private
-     * @desc Set content while result container is hidden. Reveal result and update cash after 10 seconds
+     * @desc Set content while result container is hidden. Reveal result and update cash after 5 seconds
      * @param {ResultContent} - The object contains content of result
      */
-    _showResult = ({ winnerContent, cashContent }) => {
+    _showResult = ({
+        botRank,
+        cashContent,
+        playerRank,
+        winnerContent,
+    }) => {
         this._setContent({
             'winner-text': winnerContent,
-            'cash-result': cashContent
+            'cash-result': cashContent,
+            'bot-rank': `The bot has ${botRank}.`,
+            'player-rank': `Your have ${playerRank}.`
         });
 
         setTimeout(() => {
+            this._show('result-rank-container');
+            this._show('bot-rank');
+        }, 2500);
+
+        setTimeout(() => {
+            this._show('player-rank');
             this._show('result-text-container');
-            this._setContent({ cash: this.session.cash });
-        }, 10000);
+            this._setContent({
+                cash: this.session.cash
+            });
+        }, 5000);
     }
 
 
