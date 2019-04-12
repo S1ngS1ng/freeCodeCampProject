@@ -36,15 +36,15 @@ export default class Handler {
         this.compare = new Compare();
         this.composeContent = new ComposeContent();
         this.rankMap = {
-            1: 'High card',
-            2: 'Pair',
-            3: 'Two pairs',
-            4: 'Three of a kind',
-            5: 'Straight',
-            6: 'Flush',
-            7: 'Full house',
-            8: 'Four of a kind',
-            9: 'Straight flush/Royal flush'
+            1: 'high card',
+            2: 'a pair',
+            3: 'two pairs',
+            4: 'three of a kind',
+            5: 'a straight',
+            6: 'a flush',
+            7: 'a full house',
+            8: 'four of a kind',
+            9: 'a straight flush/royal flush'
         };
 
         this._hideAll(['cash-container', 'bet-container', 'result-container', 'result-rank-container']);
@@ -117,8 +117,8 @@ export default class Handler {
 
         if (winnerRef === 0) {
             this._showResult(Object.assign(result, {
-                winnerContent: '😉 Draw!',
-                cashContent: '😌 Nothing changed!'
+                winnerContent: `😉 It's a Draw!`,
+                cashContent: ''
             }));
         } else {
             let userWin = winnerRef > 0;
