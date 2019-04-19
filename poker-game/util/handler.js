@@ -47,7 +47,7 @@ export default class Handler {
             9: 'a straight flush/royal flush'
         };
 
-        this._hideAll(['cash-container', 'bet-container', 'result-container', 'result-rank-container']);
+        this._hideAll('cash-container', 'bet-container', 'result-container', 'result-rank-container');
     }
 
     /**
@@ -55,8 +55,8 @@ export default class Handler {
      * @desc Click handler of the #start button
      */
     start = () => {
-        this._show('bet-container');
-        this._hide('result-container');
+        this._showAll('bet-container', 'cash-container');
+        this._hideAll('welcome-container', 'result-container');
 
         let userName = $('#user-name-input').value || 'Ninja Cat';
 
@@ -66,7 +66,6 @@ export default class Handler {
             this.session = new this.Session(userName);
         }
 
-        this._show('cash-container');
         // Set name and cash
         this._setContent({
             cash: this.session.cash,
@@ -84,8 +83,6 @@ export default class Handler {
         this._setContent({
             'bet-value-input-val': +Math.ceil(this.session.cash / 4)
         });
-
-        this._hide('welcome-container')
     }
 
     /**
@@ -94,7 +91,7 @@ export default class Handler {
      */
     bet = () => {
         this._show('result-container');
-        this._hideAll(['bet-container', 'result-text-container', 'action-container', 'result-rank-container', 'bot-rank', 'player-rank']);
+        this._hideAll('bet-container', 'result-text-container', 'action-container', 'result-rank-container', 'bot-rank', 'player-rank');
 
         let betValue = +$('#bet-range-input').value;
 
@@ -165,7 +162,7 @@ export default class Handler {
      * @desc Click handler of the #end button
      */
     end = () => {
-        this._hideAll(['cash-container', 'bet-container', 'result-container']);
+        this._hideAll('cash-container', 'bet-container', 'result-container');
         this._setContent({
             'user-name': ''
         });
@@ -241,13 +238,11 @@ export default class Handler {
         });
 
         setTimeout(() => {
-            this._show('result-rank-container');
-            this._show('bot-rank');
+            this._showAll('result-rank-container', 'bot-rank');
         }, 2500);
 
         setTimeout(() => {
-            this._show('player-rank');
-            this._show('result-text-container');
+            this._showAll('player-rank', 'result-text-container');
             this._setContent({
                 cash: this.session.cash
             });
@@ -320,16 +315,11 @@ export default class Handler {
      * @function Handler~_hideAll
      * @private
      * @desc Hide all elements based on the id list passed in
-     * @param {String[]} idList - The id(s) of the element(s) that should be hidden
+     * @param {...String} idList - The id(s) of the element(s) that should be hidden
      */
-    _hideAll(idList) {
+    _hideAll(...idList) {
         for (let i = 0; i < idList.length; i++) {
-            this._setAttr({
-                id: idList[i],
-                style: {
-                    display: 'none'
-                }
-            });
+            this._hide(idList[i]);
         }
     }
 
@@ -347,6 +337,18 @@ export default class Handler {
                 display: /container$/.test(id) ? 'flex' : 'block'
             }
         });
+    }
+
+    /**
+     * @function Handler~_showAll
+     * @private
+     * @desc Show all elements based on the id list passed in
+     * @param {...String} idList - The id(s) of the element(s) that should be hidden
+     */
+    _showAll(...idList) {
+        for (let i = 0; i < idList.length; i++) {
+            this._show(idList[i]);
+        }
     }
 }
 
