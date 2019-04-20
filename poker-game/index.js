@@ -9,7 +9,7 @@ import Listener from './util/bind-listener.js';
  *         - Button "Start"
  *     - 1: The second page - when the user starts his session, or when the user would like to put a new bet
  *         - Welcome header, w/ username and cash amount
- *         - "Palce bet" label, bet as in range input, bet as in number input and button "Set"
+ *         - "Place bet" label, bet as in range input, bet as in number input and button "Set"
  *     - 2: The third page - after the user places his bet
  *         - Welcome header, w/ username and cash amount (after the calculation of winner)
  *         - Poker hand of the player and the bot

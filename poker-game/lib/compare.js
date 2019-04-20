@@ -13,15 +13,22 @@ export default class Compare {
     }
 
     /**
+     * Winning object type definition
+     * @typedef {Object} WinnerObj
+     * @property {RankObj~rank} playerRank - The rank point of player's hand
+     * @property {RankObj~rank} botRank - The rank point of bot's hand
+     * @property {1 | 0 | -1} val - The value count object of the poker hand
+     *     - `1` denotes that player is the winner
+     *     - `-1` denotes that bot is the winner
+     *     - `0` denotes a draw
+     */
+    /**
      * @function Compare~isPlayerWinning
      * @desc Check if player is the winner
      * @param {Poker[]} player - The poker hand of player
      * @param {Poker[]} bot - The poker hand of bot
      * @see generate.js for Poker type def
-     * @return {1 | 0 | -1} - The result:
-     *     - `1` denotes that player is the winner
-     *     - `-1` denotes that bot is the winner
-     *     - `0` denotes a draw
+     * @return {WinnerObj} - The object that contains winner info, used by handler
      */
     isPlayerWinning(player, bot) {
         const playerHand = this._generateHandObj(player);
@@ -143,8 +150,6 @@ export default class Compare {
         };
     }
 
-    /** @note
-     */
     /**
      * Rank object type definition
      * @typedef {Object} RankObj
