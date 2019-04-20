@@ -1,5 +1,6 @@
 # Bundled
 dist/
+.cache/
 
 # macOS
 .DS_Store
