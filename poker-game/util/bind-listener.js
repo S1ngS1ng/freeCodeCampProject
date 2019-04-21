@@ -1,6 +1,5 @@
-import { $, $all } from './query.js';
+import { $ } from './query.js';
 import Handler from './handler.js';
-import Session from '../lib/session.js';
 
 export default class Listener {
     constructor() {

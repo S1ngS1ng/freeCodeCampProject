@@ -83,7 +83,7 @@ export default class Handler {
         this._setContent({
             'bet-value-input-val': +Math.ceil(this.session.cash / 4)
         });
-    }
+    };
 
     /**
      * @function Handler~bet
@@ -137,7 +137,7 @@ export default class Handler {
 
             this._checkBalance(this.session.cash);
         }
-    }
+    };
 
     /**
      * @function Handler~refill
@@ -146,7 +146,7 @@ export default class Handler {
     refill = () => {
         this.session.cash += 100;
         this.start();
-    }
+    };
 
     /**
      * @function Handler~next
@@ -155,7 +155,7 @@ export default class Handler {
     next = () => {
         this._hide('result-container');
         this.start();
-    }
+    };
 
     /**
      * @function Handler~end
@@ -170,9 +170,9 @@ export default class Handler {
             id: 'user-name-input',
             value: 'Ninja Cat'
         });
-        this._show('welcome-container')
+        this._show('welcome-container');
         this.session = null;
-    }
+    };
 
     /**
      * @function Handler~betRangeInput
@@ -183,7 +183,7 @@ export default class Handler {
         this._setContent({
             'bet-value-input-val': +e.target.value
         });
-    }
+    };
 
     /**
      * @function Handler~_checkBalance
@@ -216,7 +216,7 @@ export default class Handler {
         cards.forEach((card, index) => {
             this._rotate(card, index * 500);
         });
-    }
+    };
 
     /**
      * @function Handler~_showResult
@@ -261,7 +261,7 @@ export default class Handler {
         setTimeout(() => {
             item.style.transform = 'rotateY(180deg)';
         }, timeout);
-    }
+    };
 
     /**
      * @function Handler~_setContent
