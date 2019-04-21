@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "module": "es2015",
+    "newLine": "LF",
+    "target": "es5",
+    "sourceMap": true,
+    "lib": [
+      "dom"
+    ],
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
