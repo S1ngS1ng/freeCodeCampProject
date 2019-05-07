@@ -6,7 +6,8 @@
     "sourceMap": true,
     "lib": [
       "dom",
-      "es5"
+      "es5",
+      "es6"
     ],
     "strict": false,
     "noUnusedLocals": true,
