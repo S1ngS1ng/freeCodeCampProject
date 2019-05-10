@@ -2,6 +2,10 @@
 dist/
 .cache/
 
+# TS compiled
+poker-game-ts/**/*.js
+poker-game-ts/**/*.map
+
 # macOS
 .DS_Store
 .AppleDouble
