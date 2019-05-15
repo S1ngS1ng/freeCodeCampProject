@@ -5,11 +5,17 @@ import { Cache } from './deck.interface';
 import { InitialCache } from './deck.constant';
 
 export class Deck extends CardPile {
+    private static self: Deck;
     cache: Cache = InitialCache;
     count: number = 0;
 
     constructor() {
         super();
+    };
+
+    // Singleton
+    public static get instance() {
+        return this.self || (this.self = new this());
     };
 
     createCardHand(amount): Card[] {
