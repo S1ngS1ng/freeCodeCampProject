@@ -1,4 +1,4 @@
-import { CardSuit, CardValue  } from '../card/card.constant';
+import { CardSuit, CardValue  } from '../card';
 
 export class CardPile {
     protected readonly suits = [

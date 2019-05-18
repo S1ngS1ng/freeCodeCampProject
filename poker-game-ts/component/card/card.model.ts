@@ -1,5 +1,4 @@
-import { CardInterface } from './card.interface';
-import { CardSuit, CardValue } from './card.constant'
+import { CardInterface, CardSuit, CardValue } from './card.interface';
 
 export class Card implements CardInterface {
     readonly suit: CardSuit;

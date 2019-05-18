@@ -1,2 +1,2 @@
-export * from './card.constant'
+export * from './card.interface'
 export * from './card.model'
