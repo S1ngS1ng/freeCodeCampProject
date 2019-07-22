@@ -1,20 +1,19 @@
-import { $ } from './query';
-import Handler from './handler';
+import { $, Handler } from '../util';
 
-import { ClickToken } from './util.interface';
-
-export default class Listener {
-    public clickTokens: ClickToken[];
+export class Listener {
+    public clickTokens: string[];
     public handler: Handler;
 
     constructor() {
         this.handler = new Handler();
+        // ID of elements that will be attached w/ click listener
         this.clickTokens = ['start', 'bet', 'next', 'refill', 'end'];
     }
 
     bind(): void {
         this.clickTokens.forEach(token => {
-            $(`#${token}`).onclick = this.handler[token];
+            // Use arrow function to retain the original this as this.handler
+            $(`#${token}`).onclick = () => this.handler[token]();
         });
         $('#bet-range-input').oninput = this.handler.betRangeInput;
     }

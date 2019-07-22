@@ -1,4 +1,4 @@
-import Listener from './util/bind-listener';
+import { Listener } from './app/bind-listener';
 
 /**
  * @summary This module controls the overall process of the poker game
