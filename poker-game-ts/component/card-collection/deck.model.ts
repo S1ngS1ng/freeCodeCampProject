@@ -55,7 +55,10 @@ export class Deck extends CardPile {
     }
 
     private reset() {
-        this.cache = InitialCache;
+        // Reset cache object
+        Object.keys(this.cache).forEach(key => {
+            this.cache[key] = [];
+        });
         this.count = 0;
     }
 }
