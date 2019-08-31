@@ -19,14 +19,12 @@ export class Game {
         private bet: number,
         private deck: Deck
     ) {
-        // super();
         this.card = CardService.instance;
         this.dom = DomService.instance;
         this.botHand = this.deck.createCardHand(5);
         this.playerHand = this.deck.createCardHand(5);
         this.result = this.card.getResult(this.botHand, this.playerHand);
         this.showResult(this.result);
-        console.log(this.result)
         this.dom.setContent({
             'bot-result': this.composeContent.card(this.botHand),
             'player-result': this.composeContent.card(this.playerHand),
