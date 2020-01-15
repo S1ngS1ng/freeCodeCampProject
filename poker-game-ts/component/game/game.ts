@@ -110,7 +110,7 @@ export class Game {
      */
     private rotate(item, timeout) {
         setTimeout(() => {
-            item.style.transform = 'rotateY(180deg)';
+            item.style.transform = 'translateX(-100%) rotateY(180deg)';
         }, timeout);
     }
 

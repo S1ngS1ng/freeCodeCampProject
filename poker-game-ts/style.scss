@@ -104,6 +104,9 @@ body {
                     transform-style: preserve-3d;
                     border-radius: 6px;
                     border: 1px solid #ccc;
+                    background-color: transparent;
+                    perspective: 600px;
+                    transform-origin: center right;
 
                     .poker-hand-card-front,
                     .poker-hand-card-back {
@@ -112,7 +115,6 @@ body {
                         border-radius: 6px;
                         position: absolute;
                         border: 1px solid #ccc;
-                        backface-visibility: hidden;
                     }
 
                     .poker-hand-card-back {
@@ -122,13 +124,15 @@ body {
                         background: -webkit-repeating-linear-gradient(45deg, tomato, tomato 8px, white 8px, white 16px);
                         background: -o-repeating-linear-gradient(45deg, tomato, tomato 8px, white 8px, white 16px);
                         background: repeating-linear-gradient(45deg, tomato, tomato 8px, white 8px, white 16px);
+                        backface-visibility: hidden;
                     }
 
                     .poker-hand-card-front {
                         background: white;
-                        -webkit-transform: rotateY(180deg);
-                        -ms-transform: rotateY(180deg);
-                        transform: rotateY(180deg);
+                        -webkit-transform: rotateY(180deg) translateZ(0.01px);
+                        -ms-transform: rotateY(180deg) translateZ(0.01px);
+                        transform: rotateY(180deg) translateZ(0.01px);
+                        backface-visibility: visible;
 
                         .poker-hand-card-suit {
                             // Or else, emoji won't render as expected
