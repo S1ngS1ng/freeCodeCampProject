@@ -34,7 +34,7 @@ export class CardService {
             let botCurr = botValues[index];
             if (playerCurr !== botCurr) {
                 return Object.assign(result, {
-                    winnerRef: this._comparator(playerCurr, botCurr)
+                    winnerRef: this.comparator(playerCurr, botCurr)
                 });
             }
             index++;
@@ -74,7 +74,7 @@ export class CardService {
     /**
      * Poker object type definition
      * @typedef {Object} HandObj
-     * @property {CardValue[]} sortedValue - Poker hand values sorted by _comparator, ascendingly
+     * @property {CardValue[]} sortedValue - Poker hand values sorted by comparator, ascendingly
      * @property {Object} suit - The suit count object of the poker hand
      * @property {Object} value - The value count object of the poker hand
      */
@@ -88,7 +88,7 @@ export class CardService {
     private generateHandObj(cardList) {
         let valueCount = {};
         let suitCount = {};
-        let sortedValue = cardList.map(card => card.value).sort(this._comparator);
+        let sortedValue = cardList.map(card => card.value).sort(this.comparator);
 
         // Calculate the count of value and suit
         for (let i = 0; i < cardList.length; i++) {
@@ -114,17 +114,17 @@ export class CardService {
     }
 
     /**
-     * @function Compare~_comparator
+     * @function Compare~comparator
      * @private
-     * @desc A wrapper of _isLargerThan, where a transform function of bool => 1 or -1 has been passed in
+     * @desc A wrapper of isLargerThan, where a transform function of bool => 1 or -1 has been passed in
      *     This may be used as the callback of sort function
      */
-    private _comparator = (a, b) => {
-        return this._isLargerThan(a, b, bool => bool ? 1 : -1);
+    private comparator = (a, b) => {
+        return this.isLargerThan(a, b, bool => bool ? 1 : -1);
     };
 
     /**
-     * @function Compare~_isLargerThan
+     * @function Compare~isLargerThan
      * @private
      * @desc Compare two card values passed in
      * @param {CardValue} a - The card value
@@ -134,7 +134,7 @@ export class CardService {
      *     - When no transform function is passed in, return boolean
      *     - Else, it depends on the return value of the transform function
      */
-    private _isLargerThan(a, b, transformFunc) {
+    private isLargerThan(a, b, transformFunc) {
         let temp = a > b;
 
         if (typeof transformFunc === 'function') {
@@ -153,9 +153,9 @@ export class CardService {
     getHandType({ sortedValue: values, suit, value }): PokerHand {
         console.log(values, suit, value)
         // Check if is straight/flush, or both
-        if (this._isStraight(values) && this.isFlush(suit)) {
+        if (this.isStraight(values) && this.isFlush(suit)) {
             return PokerHand.StraightOrRoyalFlush;
-        } else if (this._isStraight(values)) {
+        } else if (this.isStraight(values)) {
             return PokerHand.Straight;
         } else if (this.isFlush(suit)) {
             return PokerHand.Flush;
@@ -176,13 +176,13 @@ export class CardService {
     }
 
     /**
-     * @function Compare~_isStraight
+     * @function Compare~isStraight
      * @private
      * @desc Check if a poker hand is straight
      * @param {HandObj~value} values - The object of cardValue => count
      * @return {Boolean}
      */
-    private _isStraight(values) {
+    private isStraight(values) {
         // Determine if the first four values are ascending
         for (let i = 0; i < values.length - 1; i++) {
             if (CardValue[values[i + 1]] !== CardValue[values[i] + 1]) {

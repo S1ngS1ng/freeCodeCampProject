@@ -35,8 +35,8 @@ export class Session {
         return this;
     }
 
-    isSessionActive(): boolean {
-        return this.user !== '';
+    isActive(): boolean {
+        return this.user !== null;
     }
 
     setCash(amount: number): void {

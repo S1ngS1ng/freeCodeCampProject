@@ -2,11 +2,15 @@ import { CardPile } from './card-pile.model';
 import { CardSuit, CardValue } from '../card';
 import { Card } from '../card';
 import { Cache } from './deck.interface';
-import { InitialCache } from './deck.constant';
 
 export class Deck extends CardPile {
     private static self: Deck;
-    cache: Cache = InitialCache;
+    cache: Cache = {
+        [CardSuit.Spade]: [],
+        [CardSuit.Heart]: [],
+        [CardSuit.Club]: [],
+        [CardSuit.Diamond]: []
+    };
     count: number = 0;
 
     constructor() {
@@ -38,6 +42,14 @@ export class Deck extends CardPile {
         return cards;
     }
 
+    reset() {
+        // Reset cache object
+        Object.keys(this.cache).forEach(key => {
+            this.cache[key] = [];
+        });
+        this.count = 0;
+    }
+
     private generateRandom(): Card {
         let suit: CardSuit;
         let value: CardValue;
@@ -52,13 +64,5 @@ export class Deck extends CardPile {
 
     private getRandomElement<T>(arr: T[]): T {
         return arr[Math.floor(Math.random() * arr.length)];
-    }
-
-    private reset() {
-        // Reset cache object
-        Object.keys(this.cache).forEach(key => {
-            this.cache[key] = [];
-        });
-        this.count = 0;
     }
 }

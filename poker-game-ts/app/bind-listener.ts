@@ -5,7 +5,7 @@ export class Listener {
     public handler: Handler;
 
     constructor() {
-        this.handler = new Handler();
+        this.handler = Handler.instance;
         // ID of elements that will be attached w/ click listener
         this.clickTokens = ['start', 'bet', 'next', 'refill', 'end'];
     }

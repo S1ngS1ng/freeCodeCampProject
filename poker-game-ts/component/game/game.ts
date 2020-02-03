@@ -10,9 +10,9 @@ export class Game {
     botHand: Card[];
     playerHand: Card[];
     card: CardService;
-    dom: DomService;
     session: Session = Session.instance;
     composeContent: ComposeContent = ComposeContent.instance;
+    private dom: DomService;
     private result: Result;
 
     constructor(

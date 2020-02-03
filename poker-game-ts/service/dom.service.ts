@@ -15,7 +15,7 @@ export class DomService {
      * @desc Update the content (innerHTML) of each element with `id`
      * @param {ElementContent} obj - Pairs of id => content
      */
-    public setContent(obj) {
+    setContent(obj) {
         for (let id in obj) {
             $(`#${id}`).innerHTML = obj[id];
         }
@@ -23,12 +23,11 @@ export class DomService {
 
     /**
      * @function setAttr
-     * @private
      * @desc Update the value(s) for the attribute(s) within the element of ${id}
      * @param {String} id - The id of a DOM element
      * @param {AttrValue} obj - Rest of the parameter, which are pairs of attr => value
      */
-    private setAttr({ id, ...pairs }) {
+    setAttr({ id, ...pairs }) {
         let ref = $(`#${id}`);
         for (let attr in pairs) {
             if (attr === 'style') {
@@ -95,5 +94,4 @@ export class DomService {
             this.show(idList[i]);
         }
     }
-
 }
