@@ -1,7 +1,9 @@
 import { CardPile } from './card-pile.model';
-import { CardSuit, CardValue } from '../card';
-import { Card } from '../card';
-import { Cache } from './deck.interface';
+import { Card, CardSuit, CardValue } from '../card';
+
+type Cache = {
+    [key in CardSuit]: CardValue[]
+};
 
 export class Deck extends CardPile {
     private static self: Deck;

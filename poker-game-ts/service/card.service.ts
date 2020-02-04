@@ -151,10 +151,13 @@ export class CardService {
      * @return {PokerHand}
      */
     getHandType({ sortedValue: values, suit, value }): PokerHand {
-        console.log(values, suit, value)
-        // Check if is straight/flush, or both
-        if (this.isStraight(values) && this.isFlush(suit)) {
+        const isFlush = this.isFlush(suit);
+        if (this.isStraight(values) && isFlush) {
             return PokerHand.StraightOrRoyalFlush;
+        } else if (this.isWheel(values) && isFlush) {
+            return PokerHand.SteelWheel;
+        } else if (this.isWheel(values)) {
+            return PokerHand.Wheel;
         } else if (this.isStraight(values)) {
             return PokerHand.Straight;
         } else if (this.isFlush(suit)) {
@@ -176,6 +179,19 @@ export class CardService {
     }
 
     /**
+     * @function Compare~isWheel
+     * @private
+     * @desc Check if a poker hand is wheel straight
+     * @param {HandObj~value} values - The object of cardValue => count
+     * @return {Boolean}
+     */
+    private isWheel(values) {
+        // This is the only case to form a wheel
+        return values[0] === 2 && values[1] === 3 && values[2] === 4 &&
+            values[3] === 5 && values[4] === 14;
+    }
+
+    /**
      * @function Compare~isStraight
      * @private
      * @desc Check if a poker hand is straight
@@ -190,10 +206,8 @@ export class CardService {
             }
         }
 
-        // Check if is wheel
-        // If not, check the last two items
-        return values[0] === 2 && values[4] === 'A' ||
-            CardValue[values[4]] === CardValue[values[3]] + 1;
+        // Does not apply to (steel) wheel straight
+        return values[4] === values[3] + 1;
     }
 
     /**

@@ -1,5 +1,5 @@
 import { Deck } from '../component/card-collection/deck.model';
-import { Game } from '../component/game';
+import { Game } from './game';
 
 export class Session {
     private static self: Session;

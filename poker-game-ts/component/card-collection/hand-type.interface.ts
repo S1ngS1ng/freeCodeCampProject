@@ -3,10 +3,12 @@ export enum PokerHand {
     OnePair,
     TwoPair,
     ThreeOfAKind,
+    Wheel,
     Straight,
     Flush,
     FullHouse,
     FourOfAKind,
+    SteelWheel,
     StraightOrRoyalFlush
 }
 

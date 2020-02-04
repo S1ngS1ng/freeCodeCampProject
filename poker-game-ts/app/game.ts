@@ -1,10 +1,18 @@
-import { Card } from '../card';
-import { Deck } from '../card-collection/deck.model';
-import { Session } from "../../app/session";
-import { DomService } from "../../service/dom.service";
-import { CardService } from '../../service/card.service';
-import { Result, WinnerRef } from './game.interface';
-import { $all, ComposeContent } from "../../util";
+import { Card } from '../component/card';
+import { Deck } from '../component/card-collection/deck.model';
+import { Session } from "./session";
+import { DomService } from "../service/dom.service";
+import { CardService } from '../service/card.service';
+import { PokerHand } from "../component/card-collection/hand-type.interface";
+import { $all, ComposeContent } from "../util";
+
+type WinnerRef = 1 | 0 | -1;
+
+interface Result {
+    botRank: PokerHand;
+    playerRank: PokerHand;
+    winnerRef: WinnerRef;
+}
 
 export class Game {
     botHand: Card[];
@@ -58,8 +66,9 @@ export class Game {
     }
 
     private getHandType(rank) {
-        const handType = ['high card', 'a pair', 'two pairs', 'three of a kind', 'a straight', 'a flush',
-            'a full house', 'four of a kind', 'a straight flush/royal flush'];
+        const handType = ['high card', 'a pair', 'two pairs', 'three of a kind',
+            'a wheel', 'a straight', 'a flush', 'a full house', 'four of a kind',
+            'a steel wheel', 'a straight flush/royal flush'];
         return handType[rank];
     }
 
