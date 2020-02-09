@@ -1,5 +1,28 @@
-import { CardValue } from '../component/card';
+import { Card, CardSuit, CardValue } from '../component/card';
 import { PokerHand } from '../component/card-collection/hand-type.interface';
+
+type Count = { [value in CardSuit]: number } | {};
+
+enum Winner {
+    Bot = -1,
+    Draw,
+    Player
+}
+
+interface ParsedHand {
+    suit: Count;
+    value: Count;
+    sortedValue: CardValue[];
+}
+
+interface ComparedResult {
+    botRank: PokerHand;
+    playerRank: PokerHand;
+    // -1: bot won
+    // 1: player won
+    // 0: draw
+    winnerRef: Winner
+}
 
 export class CardService {
     private static self: CardService;
@@ -11,17 +34,25 @@ export class CardService {
 
     constructor() { }
 
-    getResult(bot, player) {
-        const botHand = this.generateHandObj(bot);
-        const playerHand = this.generateHandObj(player);
-        const playerRank = this.getHandType(playerHand);
-        const botRank = this.getHandType(botHand);
+    /**
+     * @function getCompareResult
+     * @private
+     * @desc Compare both hands and determine the winner. The return value contains both hands for the rendering of UI
+     * @param bot - The bot's poker hand
+     * @param player - The player's poker hand
+     * @return {Object} - Parsed hand object of bot and player, together with the winnerRef to represent the winner
+     */
+    getCompareResult(bot: Card[], player: Card[]): ComparedResult {
+        const botHand: ParsedHand = this.parseHand(bot);
+        const playerHand: ParsedHand = this.parseHand(player);
+        const playerRank: PokerHand = this.getHandType(playerHand);
+        const botRank: PokerHand = this.getHandType(botHand);
 
         let result = { playerRank, botRank };
 
         if (playerRank !== botRank) {
             return Object.assign(result, {
-                winnerRef: playerRank > botRank ? 1 : -1
+                winnerRef: playerRank > botRank ? Winner.Player : Winner.Bot
             });
         }
 
@@ -34,114 +65,15 @@ export class CardService {
             let botCurr = botValues[index];
             if (playerCurr !== botCurr) {
                 return Object.assign(result, {
-                    winnerRef: this.comparator(playerCurr, botCurr)
+                    winnerRef: this.comparator(playerCurr, botCurr) === 1 ? Winner.Player : Winner.Bot
                 });
             }
             index++;
         }
 
         return Object.assign(result, {
-            winnerRef: 0
+            winnerRef: Winner.Draw
         });
-    }
-
-    /**
-     * @function constructSortedValue
-     * @private
-     * @desc Sort the card value array (no dupes) based on both value count (descendingly) and value point (descendingly)
-     *     This array is for further comparison when two poker hands have the same rank point
-     * @param {HandObj~value} valueObj - The object of cardValue => count
-     * @return {CardValue[]} - The sort result
-     */
-    private constructSortedValue(valueCount) {
-        return Object.keys(valueCount)
-            .map(Number)
-            .sort((a, b) => {
-                if (valueCount[a] < valueCount[b]) {
-                    return 1;
-                } else if (valueCount[a] > valueCount[b]) {
-                    return -1
-                } else {
-                    if (a < b) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
-                }
-            });
-    }
-
-    /**
-     * Poker object type definition
-     * @typedef {Object} HandObj
-     * @property {CardValue[]} sortedValue - Poker hand values sorted by comparator, ascendingly
-     * @property {Object} suit - The suit count object of the poker hand
-     * @property {Object} value - The value count object of the poker hand
-     */
-    /**
-     * @function Compare~generateHandObj
-     * @private
-     * @desc Sort poker hand values, calculate suit count and value count for rank determination
-     * @param {Poker[]} cardList - The poker hand array to be calculated
-     * @return {HandObj} - The hand object returned
-     */
-    private generateHandObj(cardList) {
-        let valueCount = {};
-        let suitCount = {};
-        let sortedValue = cardList.map(card => card.value).sort(this.comparator);
-
-        // Calculate the count of value and suit
-        for (let i = 0; i < cardList.length; i++) {
-            let { value, suit } = cardList[i];
-            if (valueCount[value] === undefined) {
-                valueCount[value] = 1;
-            } else {
-                valueCount[value]++;
-            }
-
-            if (suitCount[suit] === undefined) {
-                suitCount[suit] = 1;
-            } else {
-                suitCount[suit]++;
-            }
-        }
-
-        return {
-            sortedValue,
-            suit: suitCount,
-            value: valueCount,
-        };
-    }
-
-    /**
-     * @function Compare~comparator
-     * @private
-     * @desc A wrapper of isLargerThan, where a transform function of bool => 1 or -1 has been passed in
-     *     This may be used as the callback of sort function
-     */
-    private comparator = (a, b) => {
-        return this.isLargerThan(a, b, bool => bool ? 1 : -1);
-    };
-
-    /**
-     * @function Compare~isLargerThan
-     * @private
-     * @desc Compare two card values passed in
-     * @param {CardValue} a - The card value
-     * @param {CardValue} b - The card value
-     * @param {Function} [transformFunc] - The transform function (boolean => any) to be applied before finalizing the result
-     * @return {Boolean|any} - Comparison result:
-     *     - When no transform function is passed in, return boolean
-     *     - Else, it depends on the return value of the transform function
-     */
-    private isLargerThan(a, b, transformFunc) {
-        let temp = a > b;
-
-        if (typeof transformFunc === 'function') {
-            return transformFunc(temp);
-        }
-
-        return temp;
     }
 
     /**
@@ -179,10 +111,102 @@ export class CardService {
     }
 
     /**
+     * @function constructSortedValue
+     * @private
+     * @desc Sort the card value array (no dupes) based on both value count (descendingly) and value point (descendingly)
+     *     This array is for further comparison when two poker hands have the same rank point
+     * @param {Count} valueCount - The object of cardValue => count
+     * @return {CardValue[]} - The sort result
+     */
+    private constructSortedValue(valueCount: Count) {
+        return Object.keys(valueCount)
+            .map(Number)
+            .sort((a, b) => {
+                if (valueCount[a] < valueCount[b]) {
+                    return 1;
+                } else if (valueCount[a] > valueCount[b]) {
+                    return -1
+                } else {
+                    if (a < b) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+    }
+
+    /**
+     * @function parseHand
+     * @private
+     * @desc Sort poker hand values, calculate suit count and value count for rank determination
+     * @param {Card[]} cardList - The poker hand array to be calculated
+     * @return {ParsedHand} - The hand object returned
+     */
+    private parseHand(cardList: Card[]): ParsedHand {
+        let valueCount = {};
+        let suitCount = {};
+        let sortedValue = cardList.map(card => card.value).sort(this.comparator);
+
+        // Calculate the count of value and suit
+        for (let i = 0; i < cardList.length; i++) {
+            let { value, suit } = cardList[i];
+            if (valueCount[value] === undefined) {
+                valueCount[value] = 1;
+            } else {
+                valueCount[value]++;
+            }
+
+            if (suitCount[suit] === undefined) {
+                suitCount[suit] = 1;
+            } else {
+                suitCount[suit]++;
+            }
+        }
+
+        return {
+            sortedValue,
+            suit: suitCount,
+            value: valueCount,
+        };
+    }
+
+    /**
+     * @function comparator
+     * @private
+     * @desc A wrapper of isLargerThan, where a transform function of bool => 1 or -1 has been passed in
+     *     This may be used as the callback of sort function
+     */
+    private comparator = (a, b) => {
+        return this.isLargerThan(a, b, bool => bool ? 1 : -1);
+    };
+
+    /**
+     * @function isLargerThan
+     * @private
+     * @desc Compare two card values passed in
+     * @param {CardValue} a - The card value
+     * @param {CardValue} b - The card value
+     * @param {Function} [transformFunc] - The transform function (boolean => any) to be applied before finalizing the result
+     * @return {Boolean|any} - Comparison result:
+     *     - When no transform function is passed in, return boolean
+     *     - Else, it depends on the return value of the transform function
+     */
+    private isLargerThan(a, b, transformFunc) {
+        let temp = a > b;
+
+        if (typeof transformFunc === 'function') {
+            return transformFunc(temp);
+        }
+
+        return temp;
+    }
+
+    /**
      * @function Compare~isWheel
      * @private
      * @desc Check if a poker hand is wheel straight
-     * @param {HandObj~value} values - The object of cardValue => count
+     * @param {Object} values - The object of cardValue => count
      * @return {Boolean}
      */
     private isWheel(values) {
@@ -192,10 +216,10 @@ export class CardService {
     }
 
     /**
-     * @function Compare~isStraight
+     * @function isStraight
      * @private
      * @desc Check if a poker hand is straight
-     * @param {HandObj~value} values - The object of cardValue => count
+     * @param {Object} values - The object of cardValue => count
      * @return {Boolean}
      */
     private isStraight(values) {
@@ -206,7 +230,7 @@ export class CardService {
             }
         }
 
-        // Does not apply to (steel) wheel straight
+        // This does not apply to (steel) wheel straight
         return values[4] === values[3] + 1;
     }
 
@@ -214,12 +238,10 @@ export class CardService {
      * @function isFlush
      * @private
      * @desc Check if a poker hand is flush
-     * @param {HandObj~suit} suitCount - The object of suit => count
+     * @param {Object} suitCount - The object of suit => count
      * @return {Boolean}
      */
     private isFlush(suitCount) {
         return Object.keys(suitCount).length === 1;
     }
-
 }
-

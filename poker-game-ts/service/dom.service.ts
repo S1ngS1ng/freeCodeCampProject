@@ -13,7 +13,7 @@ export class DomService {
     /**
      * @function setContent
      * @desc Update the content (innerHTML) of each element with `id`
-     * @param {ElementContent} obj - Pairs of id => content
+     * @param obj - The id of an element, and its content to be set
      */
     setContent(obj) {
         for (let id in obj) {
@@ -25,7 +25,7 @@ export class DomService {
      * @function setAttr
      * @desc Update the value(s) for the attribute(s) within the element of ${id}
      * @param {String} id - The id of a DOM element
-     * @param {AttrValue} obj - Rest of the parameter, which are pairs of attr => value
+     * @param ...pairs - Rest of the parameter, which are pairs of the element attributes and their value to be set
      */
     setAttr({ id, ...pairs }) {
         let ref = $(`#${id}`);
@@ -46,7 +46,7 @@ export class DomService {
      * @desc Hide element of id
      * @param {String} id - The id of an element that should be hidden
      */
-    public hide(id) {
+    hide(id: string) {
         this.setAttr({
             id,
             style: {
@@ -57,11 +57,10 @@ export class DomService {
 
     /**
      * @function hideAll
-     * @private
      * @desc Hide all elements based on the id list passed in
      * @param {...String} idList - The id(s) of the element(s) that should be hidden
      */
-    hideAll(...idList) {
+    hideAll(...idList: string[]) {
         for (let i = 0; i < idList.length; i++) {
             this.hide(idList[i]);
         }
@@ -69,12 +68,11 @@ export class DomService {
 
     /**
      * @function show
-     * @private
      * @desc Show element of id
      * @param {String} id - The id of an element that should be displayed
      *     If the id is ending with 'container', set `display` to 'flex'
      */
-    show(id) {
+    show(id: string) {
         this.setAttr({
             id,
             style: {
@@ -85,11 +83,10 @@ export class DomService {
 
     /**
      * @function showAll
-     * @private
      * @desc Show all elements based on the id list passed in
      * @param {...String} idList - The id(s) of the element(s) that should be hidden
      */
-    showAll(...idList) {
+    showAll(...idList: string[]) {
         for (let i = 0; i < idList.length; i++) {
             this.show(idList[i]);
         }

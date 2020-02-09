@@ -8,10 +8,16 @@ import { $all, ComposeContent } from "../util";
 
 type WinnerRef = 1 | 0 | -1;
 
+enum Winner {
+    Bot = -1,
+    Draw,
+    Player
+}
+
 interface Result {
     botRank: PokerHand;
     playerRank: PokerHand;
-    winnerRef: WinnerRef;
+    winnerRef: Winner;
 }
 
 export class Game {
@@ -31,7 +37,7 @@ export class Game {
         this.dom = DomService.instance;
         this.botHand = this.deck.createCardHand(5);
         this.playerHand = this.deck.createCardHand(5);
-        this.result = this.card.getResult(this.botHand, this.playerHand);
+        this.result = this.card.getCompareResult(this.botHand, this.playerHand);
         this.showResult(this.result);
         this.dom.setContent({
             'bot-result': this.composeContent.card(this.botHand),
@@ -48,8 +54,8 @@ export class Game {
     private showResult({ botRank, playerRank, winnerRef }: Result) {
         this.dom.setContent({
             ...this.getContent(winnerRef, this.bet),
-            'bot-rank': `The bot has ${this.getHandType(botRank)}.`,
-            'player-rank': `Your have ${this.getHandType(playerRank)}.`
+            'bot-rank': `The bot has ${this.getTextOf(botRank)}.`,
+            'player-rank': `Your have ${this.getTextOf(playerRank)}.`
         });
         this.updateCash(winnerRef);
 
@@ -65,37 +71,37 @@ export class Game {
         }, 5000);
     }
 
-    private getHandType(rank) {
+    private getTextOf(hand: PokerHand): string {
         const handType = ['high card', 'a pair', 'two pairs', 'three of a kind',
             'a wheel', 'a straight', 'a flush', 'a full house', 'four of a kind',
             'a steel wheel', 'a straight flush/royal flush'];
-        return handType[rank];
+        return handType[hand];
     }
 
     private getContent(winnerRef: WinnerRef, bet: number) {
-        let result = {
+        let content = {
             'winner-text': '',
             'cash-result': ''
         };
 
-        if (winnerRef === 0) {
-            result['winner-text'] = `😉 It's a Draw!`;
-        } else if (winnerRef === 1) {
-            result['winner-text'] = `😄 You're the winner! Yay!`;
-            result['cash-result'] = `🤑 You won $${bet}!`;
+        if (winnerRef === Winner.Draw) {
+            content['winner-text'] = `😉 It's a Draw!`;
+        } else if (winnerRef === Winner.Player) {
+            content['winner-text'] = `😄 You're the winner! Yay!`;
+            content['cash-result'] = `🤑 You won $${bet}!`;
         } else {
-            result['winner-text'] = `😒 The bot won! Darn it!`;
-            result['cash-result'] = `💸 You lost $${bet}!`;
+            content['winner-text'] = `😒 The bot won! Darn it!`;
+            content['cash-result'] = `💸 You lost $${bet}!`;
         }
 
-        return result;
+        return content;
     }
 
     private updateCash(winnerRef: WinnerRef) {
         const currentCash = this.session.cash;
-        if (winnerRef === 1) {
+        if (winnerRef === Winner.Player) {
             this.session.setCash(currentCash + this.bet);
-        } else if (winnerRef === -1) {
+        } else if (winnerRef === Winner.Bot) {
             this.session.setCash(currentCash - this.bet);
         }
 
@@ -142,5 +148,4 @@ export class Game {
             this.dom.show('action-container');
         }, 5000);
     }
-
 }
