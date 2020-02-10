@@ -1,7 +1,7 @@
+import { Card, CardValue } from "../component/card";
+
 /**
- * Object that contains pairs as in id => content
- * @typedef {Object} TemplateObject
- *name, content, className = '', idName = ''
+ * @interface TemplateObject - Object that contains pairs as in id => content
  * @property {String} name - The tag name
  * @property {String|TemplateObject[]} content - The content within the tag:
  *     - For string, use as is
@@ -9,9 +9,15 @@
  * @property {String} [className] - The class to be assigned
  * @property {String} [idName] - The id to be assigned
  */
+interface TemplateObject {
+    name: string;
+    content: string | TemplateObject[];
+    className?: string;
+    idName?: string;
+}
 
 /**
- * @module ComposeContent
+ * @class ComposeContent
  * @desc The module to be used for creating HTML content
  */
 export class ComposeContent {
@@ -29,11 +35,10 @@ export class ComposeContent {
      * @function card
      * @public
      * @desc Generate partial template for displaying cards
-     * @param {Poker[]} cardList - The poker hand
-     * @see ../lib/generate.js for Poker type def
-     * @return {String<HTML>} - The HTML content of the poker hand
+     * @param {Card[]} cardList - The poker hand
+     * @return {String} - The HTML content of the poker hand to be rendered
      */
-    card(cardList) {
+    card(cardList: Card[]) {
         return this.tag({
             name: 'div',
             className: 'poker-hand-result',
@@ -65,25 +70,35 @@ export class ComposeContent {
         });
     }
 
-    private getPoint(value) {
+    /**
+     * @function getPoint
+     * @private
+     * @param {Number} value - The card value to be converted
+     * @return {String} The string representation of the card value, which is from '2' - '10' and 'J' to 'A'
+     */
+    private getPoint(value: CardValue): string {
         const royal = ['J', 'Q', 'K', 'A'];
 
         if (value > 10) {
             return royal[value - 11];
         }
 
-        return value;
+        return `${value}`;
     }
-
 
     /**
      * @function tag
      * @private
      * @desc Generate the HTML content based on the given parameters
      * @param {TemplateObject} - The template object to be used
-     * @return {String<HTML>} - The HTML content
+     * @return {String} - The HTML string to be rendered
      */
-    private tag({ name, content, className = '', idName = '' }) {
+    private tag({
+        className,
+        content,
+        name,
+        idName = ''
+    }: TemplateObject): string {
         // Construct attribute string
         let attributes = this.attr({
             class: className,
@@ -101,13 +116,12 @@ export class ComposeContent {
     /**
      * @function attr
      * @private
-     * @desc Transform the HTML attribute => value object to string, which is to be used when composing the HTML content
+     * @desc Transform the HTML {attribute => value} object to string, which is to be used when composing the HTML content
      *     Return empty string when value is empty
-     * @param {Object} obj - Pairs of HTML attribute => value
+     * @param {Object} obj - Pairs of HTML attribute => value that to be applied to the HTML element
      * @return {String} - The attribute string to be used
      */
-    private attr(obj) {
+    private attr(obj): string {
         return Object.keys(obj).map(key => obj[key] && ` ${key}="${obj[key]}"`).join('');
     }
 }
-

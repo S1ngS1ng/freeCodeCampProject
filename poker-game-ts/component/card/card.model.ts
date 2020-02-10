@@ -9,4 +9,3 @@ export class Card implements CardInterface {
         this.value = value;
     }
 }
-

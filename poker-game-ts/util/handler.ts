@@ -2,8 +2,15 @@ import { $ } from './query';
 import { ComposeContent } from './compose-content';
 import { Deck } from "../component/card-collection/deck.model";
 import { Session } from '../app/session';
-import { MaterialSliderElement } from './handler.interface';
 import { DomService } from "../service/dom.service";
+
+interface MaterialSliderElement extends HTMLInputElement {
+    MaterialSlider: {
+        change(value: number);
+        disable();
+        enable();
+    }
+}
 
 /**
  * @class Handler
