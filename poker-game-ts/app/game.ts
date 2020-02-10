@@ -6,8 +6,6 @@ import { CardService } from '../service/card.service';
 import { PokerHand } from "../component/card-collection/hand-type.interface";
 import { $all, ComposeContent } from "../util";
 
-type WinnerRef = 1 | 0 | -1;
-
 enum Winner {
     Bot = -1,
     Draw,
@@ -78,7 +76,7 @@ export class Game {
         return handType[hand];
     }
 
-    private getContent(winnerRef: WinnerRef, bet: number) {
+    private getContent(winnerRef: Winner, bet: number) {
         let content = {
             'winner-text': '',
             'cash-result': ''
@@ -97,7 +95,7 @@ export class Game {
         return content;
     }
 
-    private updateCash(winnerRef: WinnerRef) {
+    private updateCash(winnerRef: Winner) {
         const currentCash = this.session.cash;
         if (winnerRef === Winner.Player) {
             this.session.setCash(currentCash + this.bet);

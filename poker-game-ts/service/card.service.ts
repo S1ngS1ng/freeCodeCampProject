@@ -18,9 +18,6 @@ interface ParsedHand {
 interface ComparedResult {
     botRank: PokerHand;
     playerRank: PokerHand;
-    // -1: bot won
-    // 1: player won
-    // 0: draw
     winnerRef: Winner
 }
 
