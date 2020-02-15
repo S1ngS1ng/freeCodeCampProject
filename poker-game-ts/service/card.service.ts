@@ -75,11 +75,12 @@ export class CardService {
 
     /**
      * @function getHandType
+     * @private
      * @desc Calculate poker hand type
      * @param {Card[]} hand - The card array to be calculated
      * @return {PokerHand}
      */
-    getHandType({ sortedValue: values, suit, value }): PokerHand {
+    private getHandType({ sortedValue: values, suit, value }): PokerHand {
         const isFlush = this.isFlush(suit);
         if (this.isStraight(values) && isFlush) {
             return PokerHand.StraightOrRoyalFlush;
