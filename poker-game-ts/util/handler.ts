@@ -1,8 +1,7 @@
-import { $ } from './query';
+import { $, hide, hideAll, setAttr, setContent, show, showAll } from './dom';
 import { ComposeContent } from './compose-content';
 import { Deck } from "../component/card-collection/deck.model";
 import { Session } from '../app/session';
-import { DomService } from "../service/dom.service";
 
 interface MaterialSliderElement extends HTMLInputElement {
     MaterialSlider: {
@@ -22,7 +21,6 @@ export class Handler {
     public rankMap: Object;
     private session: Session;
     private deck: Deck;
-    private dom: DomService;
 
     // Singleton
     public static get instance() {
@@ -31,7 +29,6 @@ export class Handler {
 
     constructor() {
         this.composeContent = ComposeContent.instance;
-        this.dom = DomService.instance;
         this.deck = Deck.instance;
         this.session = Session.instance;
 
@@ -47,7 +44,7 @@ export class Handler {
             9: 'a straight flush/royal flush'
         };
 
-        this.dom.hideAll('cash-container', 'bet-container', 'result-container', 'result-rank-container');
+        hideAll('cash-container', 'bet-container', 'result-container', 'result-rank-container');
     }
 
     /**
@@ -55,8 +52,8 @@ export class Handler {
      * @desc Click handler of the #start button
      */
     start() {
-        this.dom.showAll('bet-container', 'cash-container');
-        this.dom.hideAll('welcome-container', 'result-container');
+        showAll('bet-container', 'cash-container');
+        hideAll('welcome-container', 'result-container');
 
         let userName = $('#user-name-input').value || 'Ninja Cat';
         let betRangeInputRef = $('#bet-range-input') as MaterialSliderElement;
@@ -68,7 +65,7 @@ export class Handler {
         }
 
         // Set name and cash
-        this.dom.setContent({
+        setContent({
             cash: this.session.cash,
             'user-name': userName
         });
@@ -76,12 +73,12 @@ export class Handler {
         // "Two-way binding" of both (slider and text) input
         // See: https://getmdl.io/components/index.html#sliders-section
         betRangeInputRef.MaterialSlider.change(+Math.ceil(this.session.cash / 4));
-        this.dom.setAttr({
+        setAttr({
             id: 'bet-range-input',
             max: this.session.cash
         });
 
-        this.dom.setContent({
+        setContent({
             'bet-value-input-val': +Math.ceil(this.session.cash / 4)
         });
     }
@@ -91,11 +88,11 @@ export class Handler {
      * @desc Click handler of the #bet button
      */
     bet() {
-        this.dom.show('result-container');
-        this.dom.hideAll('bet-container', 'result-text-container', 'action-container', 'result-rank-container', 'bot-rank', 'player-rank');
+        show('result-container');
+        hideAll('bet-container', 'result-text-container', 'action-container', 'result-rank-container', 'bot-rank', 'player-rank');
 
         let betValue = +$('#bet-range-input').value;
-        this.dom.setContent({ 'bet-in-result': betValue });
+        setContent({ 'bet-in-result': betValue });
 
         this.session.nextGame(betValue);
     }
@@ -114,7 +111,7 @@ export class Handler {
      * @desc Click handler of the #next button
      */
     next() {
-        this.dom.hide('result-container');
+        hide('result-container');
         this.start();
     }
 
@@ -123,15 +120,15 @@ export class Handler {
      * @desc Click handler of the #end button
      */
     end() {
-        this.dom.hideAll('cash-container', 'bet-container', 'result-container');
-        this.dom.setContent({
+        hideAll('cash-container', 'bet-container', 'result-container');
+        setContent({
             'user-name': ''
         });
-        this.dom.setAttr({
+        setAttr({
             id: 'user-name-input',
             value: ''
         });
-        this.dom.show('welcome-container');
+        show('welcome-container');
 
         this.session.clear();
         // Reset the deck for the new session later on
@@ -144,7 +141,7 @@ export class Handler {
      * @param {Object} e - The event object
      */
     betRangeInput = e => {
-        this.dom.setContent({
+        setContent({
             'bet-value-input-val': +e.target.value
         });
     };

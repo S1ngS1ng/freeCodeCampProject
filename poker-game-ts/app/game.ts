@@ -1,10 +1,9 @@
+import { $all, ComposeContent, hide, setContent, show, showAll } from "../util";
 import { Card } from '../component/card';
 import { Deck } from '../component/card-collection/deck.model';
 import { Session } from "./session";
-import { DomService } from "../service/dom.service";
 import { CardService } from '../service/card.service';
 import { PokerHand } from "../component/card-collection/hand-type.interface";
-import { $all, ComposeContent } from "../util";
 
 enum Winner {
     Bot = -1,
@@ -24,7 +23,6 @@ export class Game {
     card: CardService;
     session: Session = Session.instance;
     composeContent: ComposeContent = ComposeContent.instance;
-    private dom: DomService;
     private result: Result;
 
     constructor(
@@ -32,12 +30,11 @@ export class Game {
         private deck: Deck
     ) {
         this.card = CardService.instance;
-        this.dom = DomService.instance;
         this.botHand = this.deck.createCardHand(5);
         this.playerHand = this.deck.createCardHand(5);
         this.result = this.card.getCompareResult(this.botHand, this.playerHand);
         this.showResult(this.result);
-        this.dom.setContent({
+        setContent({
             'bot-result': this.composeContent.card(this.botHand),
             'player-result': this.composeContent.card(this.playerHand),
         });
@@ -50,7 +47,7 @@ export class Game {
      * @desc Set content while result container is hidden. Reveal result and update cash after 5 seconds
      */
     private showResult({ botRank, playerRank, winnerRef }: Result) {
-        this.dom.setContent({
+        setContent({
             ...this.getContent(winnerRef, this.bet),
             'bot-rank': `The bot has ${this.getTextOf(botRank)}.`,
             'player-rank': `Your have ${this.getTextOf(playerRank)}.`
@@ -58,12 +55,12 @@ export class Game {
         this.updateCash(winnerRef);
 
         setTimeout(() => {
-            this.dom.showAll('result-rank-container', 'bot-rank');
+            showAll('result-rank-container', 'bot-rank');
         }, 2500);
 
         setTimeout(() => {
-            this.dom.showAll('player-rank', 'result-text-container');
-            this.dom.setContent({
+            showAll('player-rank', 'result-text-container');
+            setContent({
                 cash: this.session.cash
             });
         }, 5000);
@@ -134,16 +131,16 @@ export class Game {
      */
     private checkBalance(cash) {
         if (cash > 0) {
-            this.dom.hide('refill');
-            this.dom.show('next');
+            hide('refill');
+            show('next');
         } else {
             setTimeout(() => {
-                this.dom.hide('next');
-                this.dom.show('refill');
+                hide('next');
+                show('refill');
             }, 5000);
         }
         setTimeout(() => {
-            this.dom.show('action-container');
+            show('action-container');
         }, 5000);
     }
 }
