@@ -1,5 +1,4 @@
 import { $, hide, hideAll, setAttr, setContent, show, showAll } from './dom';
-import { ComposeContent } from './compose-content';
 import { Deck } from "../component/card-collection/deck.model";
 import { Session } from '../app/session';
 
@@ -17,7 +16,6 @@ interface MaterialSliderElement extends HTMLInputElement {
  */
 export class Handler {
     private static self: Handler;
-    public composeContent: ComposeContent;
     public rankMap: Object;
     private session: Session;
     private deck: Deck;
@@ -28,7 +26,6 @@ export class Handler {
     };
 
     constructor() {
-        this.composeContent = ComposeContent.instance;
         this.deck = Deck.instance;
         this.session = Session.instance;
 

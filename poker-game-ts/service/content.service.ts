@@ -1,3 +1,4 @@
+import { PokerHand } from "../component/card-collection/hand-type.interface";
 import { Card, CardValue } from "../component/card";
 
 /**
@@ -16,13 +17,29 @@ interface TemplateObject {
     idName?: string;
 }
 
-/**
- * @class ComposeContent
- * @desc The module to be used for creating HTML content
- */
-export class ComposeContent {
-    private static self: ComposeContent;
+interface HandContent {
+    'bot-result': string;
+    'player-result': string;
+}
+
+type ResultPartial = {
+    'winner-text': string,
+    'cash-result': string,
+}
+
+type ResultContent = {
+    'bot-rank': string,
+    'player-rank': string,
+} & ResultPartial;
+
+enum Winner {
+    Bot = -1,
+    Draw,
+    Player
+}
+export class ContentService {
     private suitArr = ['♠️', '♥️', '♣️', '♦️'];
+    private static self: ContentService;
 
     // Singleton
     public static get instance() {
@@ -32,13 +49,80 @@ export class ComposeContent {
     constructor() { }
 
     /**
-     * @function card
-     * @public
+     * @function getHand
+     * @desc Generate the hand type content object (id => content) that is used directly by `setContent`
+     * @param {Object} - An object contains both botHand: Card[] and playerHand: Card[]
+     * @return {HandContent} - The attributes denote the id of the block to be updated and the values are the content.
+     */
+    getHand({ botHand, playerHand }): HandContent {
+        return {
+            'bot-result': this.cardResult(botHand),
+            'player-result': this.cardResult(playerHand),
+        };
+    }
+
+    /**
+     * @function getResult
+     * @desc Generate all result content object (id => content) that is used directly by `setContent`
+     * @param {Object} - An object contains botRank, playerRank, winnerRef and bet
+     * @return {ResultContent}: The id of 4 blocks to be updated and their content, respectively. Used directly by `setContent`
+     */
+    getResult({ botRank, playerRank, winnerRef, bet }): ResultContent {
+        let res = {
+            'bot-rank': `The bot has ${this.getRankText(botRank)}.`,
+            'player-rank': `Your have ${this.getRankText(playerRank)}.`,
+        };
+
+        return Object.assign({}, res, this.getWinnerContent(winnerRef, bet));
+    }
+
+    /**
+     * @function getWinnerContent
+     * @private
+     * @param {Winner} winnerRef - Number that indicates who is the winner
+     * @param {number} bet - The amount of bet
+     * @return
+     */
+    private getWinnerContent(winnerRef: Winner, bet: number) {
+        let content = {
+            'winner-text': '',
+            'cash-result': ''
+        };
+
+        if (winnerRef === Winner.Draw) {
+            content['winner-text'] = `😉 It's a Draw!`;
+        } else if (winnerRef === Winner.Player) {
+            content['winner-text'] = `😄 You're the winner! Yay!`;
+            content['cash-result'] = `🤑 You won $${bet}!`;
+        } else {
+            content['winner-text'] = `😒 The bot won! Darn it!`;
+            content['cash-result'] = `💸 You lost $${bet}!`;
+        }
+
+        return content;
+    }
+
+    /**
+     * @function getRankText
+     * @private
+     * @param {PokerHand} hand - The poker hand as defined in hand-type.interface
+     * @return The text of a poker hand, to be displayed in the result section
+     */
+    private getRankText(hand: PokerHand): string {
+        const handType = ['high card', 'a pair', 'two pairs', 'three of a kind',
+            'a wheel', 'a straight', 'a flush', 'a full house', 'four of a kind',
+            'a steel wheel', 'a straight flush/royal flush'];
+        return handType[hand];
+    }
+
+    /**
+     * @function cardResult
+     * @private
      * @desc Generate partial template for displaying cards
      * @param {Card[]} cardList - The poker hand
      * @return {String} - The HTML content of the poker hand to be rendered
      */
-    card(cardList: Card[]) {
+    private cardResult(cardList: Card[]) {
         return this.tag({
             name: 'div',
             className: 'poker-hand-result',

@@ -1,8 +1,9 @@
-import { $all, ComposeContent, hide, setContent, show, showAll } from "../util";
+import { $all, hide, setContent, show, showAll } from "../util";
 import { Card } from '../component/card';
 import { Deck } from '../component/card-collection/deck.model';
 import { Session } from "./session";
 import { CardService } from '../service/card.service';
+import { ContentService } from '../service/content.service';
 import { PokerHand } from "../component/card-collection/hand-type.interface";
 
 enum Winner {
@@ -21,8 +22,8 @@ export class Game {
     botHand: Card[];
     playerHand: Card[];
     card: CardService;
+    content: ContentService;
     session: Session = Session.instance;
-    composeContent: ComposeContent = ComposeContent.instance;
     private result: Result;
 
     constructor(
@@ -30,14 +31,15 @@ export class Game {
         private deck: Deck
     ) {
         this.card = CardService.instance;
+        this.content = ContentService.instance;
         this.botHand = this.deck.createCardHand(5);
         this.playerHand = this.deck.createCardHand(5);
         this.result = this.card.getCompareResult(this.botHand, this.playerHand);
         this.showResult(this.result);
-        setContent({
-            'bot-result': this.composeContent.card(this.botHand),
-            'player-result': this.composeContent.card(this.playerHand),
-        });
+        setContent(this.content.getHand({
+            botHand: this.botHand,
+            playerHand: this.playerHand,
+        }));
         this.showCard();
     };
 
@@ -47,11 +49,12 @@ export class Game {
      * @desc Set content while result container is hidden. Reveal result and update cash after 5 seconds
      */
     private showResult({ botRank, playerRank, winnerRef }: Result) {
-        setContent({
-            ...this.getContent(winnerRef, this.bet),
-            'bot-rank': `The bot has ${this.getTextOf(botRank)}.`,
-            'player-rank': `Your have ${this.getTextOf(playerRank)}.`
-        });
+        setContent(this.content.getResult({
+            botRank,
+            playerRank,
+            winnerRef,
+            bet: this.bet,
+        }));
         this.updateCash(winnerRef);
 
         setTimeout(() => {
@@ -66,32 +69,12 @@ export class Game {
         }, 5000);
     }
 
-    private getTextOf(hand: PokerHand): string {
-        const handType = ['high card', 'a pair', 'two pairs', 'three of a kind',
-            'a wheel', 'a straight', 'a flush', 'a full house', 'four of a kind',
-            'a steel wheel', 'a straight flush/royal flush'];
-        return handType[hand];
-    }
-
-    private getContent(winnerRef: Winner, bet: number) {
-        let content = {
-            'winner-text': '',
-            'cash-result': ''
-        };
-
-        if (winnerRef === Winner.Draw) {
-            content['winner-text'] = `😉 It's a Draw!`;
-        } else if (winnerRef === Winner.Player) {
-            content['winner-text'] = `😄 You're the winner! Yay!`;
-            content['cash-result'] = `🤑 You won $${bet}!`;
-        } else {
-            content['winner-text'] = `😒 The bot won! Darn it!`;
-            content['cash-result'] = `💸 You lost $${bet}!`;
-        }
-
-        return content;
-    }
-
+    /**
+     * @function updateCash
+     * @private
+     * @desc Update player's cash based on the winnerRef
+     * @param {Winner} winnerRef - 1, 0 or -1
+     */
     private updateCash(winnerRef: Winner) {
         const currentCash = this.session.cash;
         if (winnerRef === Winner.Player) {
@@ -103,6 +86,11 @@ export class Game {
         this.checkBalance(this.session.cash);
     }
 
+    /**
+     * @function showCard
+     * @private
+     * @desc Show all 10 cards at the speed of 1 card per 0.5 second
+     */
     private showCard() {
         const cards = $all('.poker-hand-result-item');
 
