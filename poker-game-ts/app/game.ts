@@ -103,7 +103,7 @@ export class Game {
      * @function rotate
      * @private
      * @param {Object} item - The DOM ref of a card
-     * @param {Number} timeout - The timeout to be set
+     * @param {number} timeout - The timeout to be set
      * @desc Add rotateY transform to card, excuted after the given time period
      */
     private rotate(item, timeout) {

@@ -16,7 +16,7 @@ export const setContent = obj => {
 /**
  * @function setAttr
  * @desc Update the value(s) for the attribute(s) within the element of ${id}
- * @param {String} id - The id of a DOM element
+ * @param {string} id - The id of a DOM element
  * @param ...pairs - Rest of the parameter, which are pairs of the element attributes and their value to be set
  */
 export const setAttr = ({ id, ...pairs }) => {
@@ -36,7 +36,7 @@ export const setAttr = ({ id, ...pairs }) => {
 /**
  * @function hide
  * @desc Hide element of id
- * @param {String} id - The id of an element that should be hidden
+ * @param {string} id - The id of an element that should be hidden
  */
 export const hide = (id: string) => {
     setAttr({
@@ -50,7 +50,7 @@ export const hide = (id: string) => {
 /**
  * @function hideAll
  * @desc Hide all elements based on the id list passed in
- * @param {...String} idList - The id(s) of the element(s) that should be hidden
+ * @param {...string[]} idList - The id(s) of the element(s) that should be hidden
  */
 export const hideAll = (...idList: string[]) => {
     for (let i = 0; i < idList.length; i++) {
@@ -61,7 +61,7 @@ export const hideAll = (...idList: string[]) => {
 /**
  * @function show
  * @desc Show element of id
- * @param {String} id - The id of an element that should be displayed
+ * @param {string} id - The id of an element that should be displayed
  *     If the id is ending with 'container', set `display` to 'flex'
  */
 export const show = (id: string) => {
@@ -76,7 +76,7 @@ export const show = (id: string) => {
 /**
  * @function showAll
  * @desc Show all elements based on the id list passed in
- * @param {...String} idList - The id(s) of the element(s) that should be hidden
+ * @param {...string[]} idList - The id(s) of the element(s) that should be hidden
  */
 export const showAll = (...idList: string[]) => {
     for (let i = 0; i < idList.length; i++) {

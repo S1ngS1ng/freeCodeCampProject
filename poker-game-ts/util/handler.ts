@@ -45,7 +45,7 @@ export class Handler {
     }
 
     /**
-     * @function Handler~start
+     * @function start
      * @desc Click handler of the #start button
      */
     start() {
@@ -81,7 +81,7 @@ export class Handler {
     }
 
     /**
-     * @function Handler~bet
+     * @function bet
      * @desc Click handler of the #bet button
      */
     bet() {
@@ -95,7 +95,7 @@ export class Handler {
     }
 
     /**
-     * @function Handler~refill
+     * @function refill
      * @desc Click handler of the #refill button, add $100 to cash
      */
     refill() {
@@ -104,7 +104,7 @@ export class Handler {
     }
 
     /**
-     * @function Handler~next
+     * @function next
      * @desc Click handler of the #next button
      */
     next() {
@@ -113,7 +113,7 @@ export class Handler {
     }
 
     /**
-     * @function Handler~end
+     * @function end
      * @desc Click handler of the #end button
      */
     end() {
@@ -133,7 +133,7 @@ export class Handler {
     }
 
     /**
-     * @function Handler~betRangeInput
+     * @function betRangeInput
      * @desc Input handler of the #bet-range-input slider
      * @param {Object} e - The event object
      */

@@ -175,39 +175,16 @@ export class CardService {
      * @desc A wrapper of isLargerThan, where a transform function of bool => 1 or -1 has been passed in
      *     This may be used as the callback of sort function
      */
-    private comparator = (a, b) => {
-        return this.isLargerThan(a, b, bool => bool ? 1 : -1);
-    };
+    private comparator = (a, b): number => a > b ? 1 : -1;
 
     /**
-     * @function isLargerThan
-     * @private
-     * @desc Compare two card values passed in
-     * @param {CardValue} a - The card value
-     * @param {CardValue} b - The card value
-     * @param {Function} [transformFunc] - The transform function (boolean => any) to be applied before finalizing the result
-     * @return {Boolean|any} - Comparison result:
-     *     - When no transform function is passed in, return boolean
-     *     - Else, it depends on the return value of the transform function
-     */
-    private isLargerThan(a, b, transformFunc) {
-        let temp = a > b;
-
-        if (typeof transformFunc === 'function') {
-            return transformFunc(temp);
-        }
-
-        return temp;
-    }
-
-    /**
-     * @function Compare~isWheel
+     * @function isWheel
      * @private
      * @desc Check if a poker hand is wheel straight
      * @param {Object} values - The object of cardValue => count
-     * @return {Boolean}
+     * @return {boolean}
      */
-    private isWheel(values) {
+    private isWheel(values): boolean {
         // This is the only case to form a wheel
         return values[0] === 2 && values[1] === 3 && values[2] === 4 &&
             values[3] === 5 && values[4] === 14;
@@ -218,9 +195,9 @@ export class CardService {
      * @private
      * @desc Check if a poker hand is straight
      * @param {Object} values - The object of cardValue => count
-     * @return {Boolean}
+     * @return {boolean}
      */
-    private isStraight(values) {
+    private isStraight(values): boolean {
         // Determine if the first four values are ascending
         for (let i = 0; i < values.length - 1; i++) {
             if (CardValue[values[i + 1]] !== CardValue[values[i] + 1]) {
@@ -237,9 +214,9 @@ export class CardService {
      * @private
      * @desc Check if a poker hand is flush
      * @param {Object} suitCount - The object of suit => count
-     * @return {Boolean}
+     * @return {boolean}
      */
-    private isFlush(suitCount) {
+    private isFlush(suitCount): boolean {
         return Object.keys(suitCount).length === 1;
     }
 }
