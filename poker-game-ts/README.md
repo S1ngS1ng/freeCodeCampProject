@@ -1,5 +1,5 @@
 # Application Recipe
-**Note: This is the order in which I built this app. So, it is just F.Y.I.**
+**Note: This is the order in which I built this app. Hence it is just F.Y.I.**
 
 ## Prerequisite
 ### Workflow
@@ -19,17 +19,18 @@ Consider the modules that we need to build this application. Here is what I thou
     - Also, we'll need some place to cache the poker that has appeared so far. This is implemented in the Deck module
 
 ## Generate card
-1. Consider types, as per TypeScript. Poker hand (either the player's or the bot's) are nothing but several poker cards, with each generated randomly. Deck is just bunch of poker cards. That said, we need a PokerCard class. Some may consider its better to name it as an interface. But I opt-in for class due to its versatility, and the ability to use it as a constructor, which is exactly what we need for PokerCard
-2. So, what is needed to form a poker card? Simple, just `suit` (Spade, Heart, Club and Diamond) and `value` (from 2 to A). Both will be the attributes of `Poker`. We don't need to care about the back pattern since all cards are identical, at least for our app. In my application, here is what I got so far:
+1. Consider types, as per TypeScript. Poker hand (either the player's or the bot's) are nothing but several poker cards, with each generated randomly. Deck is just bunch of poker cards. That said, we need a `PokerCard` class. Some may consider its better to name it as an interface. But I opt-in for class due to its versatility, and the ability to use it as a constructor. In my code, I name it as `Poker`
+2. So, how should we identify a real poker card? Simple, just `suit` (Spade, Heart, Club and Diamond) and `value` (from 2 to A). Both will be the attributes of `Poker`. In the application, here is what we've got so far:
     - `CardSuit` and `CardValue` as `enum`
-    - `Card` as in `class`, this is the one mentioned as "PokerCard" above
-3. Now, it is obvious that both `PokerHand` and `Deck` are `Poker[]`, despite their difference in the `Poker` quantity
-4. Then, I started working on the logic of generating random cards. Note that this action is related to the `Deck` as well. We don't want an Ace of Spade to appear twice on the table, nor do we want to overuse the deck. That's the reason why we need to keep a `cache` in the deck. For every card that is randomly generated, we'll save its suit and value to the `cache`
-5. But that's not all about `cache`. In order to prevent duplicate cards from happening, we'll need to check the `cache` to determine if the randomly generated card is valid. If it's not, just create another random card. It won't take hundreds of times before you get a valid card, no worries
-6. Moreover, I decided to do a "reshuffle" when certain amount of cards are plucked out from the current deck since I noticed in the real casino, they never use up a full deck of card. So, we'll need to keep a counter (named `count`) in the `Deck` module as well. As you may guess, "reshuffle" is just clearing/resetting the cache object, simple yet practical
+    - `Card` as in `class`, this is the "PokerCard" mentioned above
+3. It is obvious that both `PokerHand` and `Deck` are `Poker[]` (some prefers the other notation `Array<Poker>`), despite their difference in the `Poker` quantity
+4. Then, we may start working on the logic of generating random cards. Note that this action is related to the `Deck` as well. We don't want an Ace of Spade to appear twice on the table, nor do we want to overuse the deck. That's the reason why we need to keep a `cache` in the deck. For every card that is randomly generated, we'll save its suit and value to the `cache`
+5. In order to prevent generating duplicate cards, we'll need to check if the card is already generated in the `cache` object. If it is, just create another random card. It won't take hundreds of times before you get a valid card, no worries
+6. Moreover, I decided to do a "reshuffle" when certain amount of cards are plucked out from the current deck. Since I noticed in the real casino, they never use up a full deck of card. So, we'll need to keep a counter (named `count`) in the `Deck` module as well. As you may guess, "reshuffle" is just clearing/resetting the cache object, simple yet practical
+
 ## Compare card
 ### Cases
-1. There are 11 poker hands, ranked from high to low (though, some may argue regarding the Wheel and Steel Wheel):
+1. There are altogether 11 poker hands, ranked from high to low (though, depending on the rule, Wheel and Steel Wheel may not apply):
     1. Straight flush (including Royal Flush, which is the highest)
     2. Steel wheel (a straight that starts with an A, then 2, 3, 4, 5. All in the same suit)
     3. Four of a kind
